@@ -1,0 +1,17 @@
+{
+  "name": "OrientedImagery",
+  "label": "Oriented Imagery",
+  "platform": "HTML",
+  "version": "",
+  "author": "Esri",
+  "description": "",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {
+    "hasLocale" : true,
+    "hasSettingLocale" : false,
+    "hasSettingPage" : true,
+    "hasSettingUIFile" : true,
+    "hasSettingStyle" : true
+  }
+}

@@ -1,0 +1,30 @@
+<div class="secondary-pane add-file-pane">
+
+  <div class="generalize-options">
+    <div data-dojo-type="jimu/dijit/CheckBox"
+      data-dojo-attach-point="generalizeCheckBox"
+      data-dojo-props="checked:true">
+    </div>
+  </div>
+
+  <div class="browse-or-drop">
+    <div class="drop-container" data-dojo-attach-point="dropContainer">
+      <div class="drop-area" data-dojo-attach-point="dropArea">
+        <div class="supported-file-types" data-dojo-attach-point="supportedFileTypes"></div>
+        <div class="or">${i18n.addFromFile.dropOrBrowse}</div>
+        <form class="file-form" enctype="multipart/form-data" method="post"
+          data-dojo-attach-point="fileForm">
+          <label for="${id}_file" class="jimu-btn"
+            data-dojo-attach-point="uploadLabel">${i18n.addFromFile.browse}</label>
+          <input id="${id}_file" name="file" type="file" style="display:none"
+            data-dojo-attach-point="fileNode" />
+        </form>
+        <a href="#" class="drop-area-hint" data-dojo-attach-point="hintButton">
+          <i class="esri-icon-question"></i>
+        </a>
+        <span class="upload-arrow"></span>
+      </div>
+    </div>
+  </div>
+
+</div>

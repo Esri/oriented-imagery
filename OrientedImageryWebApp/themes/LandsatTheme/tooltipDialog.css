@@ -1,0 +1,147 @@
+/*.claro .dijitPopup.dijitTooltipDialogPopup{
+    left: 95px;
+}
+.claro .dijitTooltipDialog .dijitTooltipContainer{
+    background: #00304d;
+    border: #00304d;
+    width: 300px;
+    border-radius: 4px;
+    margin: 5px;
+    display: block;
+    color:#fff;
+    padding: 7px 10px;
+    -webkit-box-shadow: 0 5px 5px rgba(0,0,0,0.75);
+    box-shadow: 0 5px 5px rgba(0,0,0,0.75);
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+}
+.claro .dijitTooltipDialog.dijitTooltipLeft .dijitTooltipContainer{
+    background: #00304d;
+    border: #00304d;
+    width: 300px;
+    border-radius: 4px;
+    margin-right: 15px;
+    display: block;
+    color:#fff;
+    padding: 7px 10px;
+    -webkit-box-shadow: 5px 5px 5px rgba(0,0,0,0.75);
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.75);
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+}
+.dijitTooltipFocusNode{
+    padding: 4px 6px 4px 6px;
+}
+.claro .dijitTooltipDialog.dijitTooltipRight .dijitTooltipContainer{
+    border-left: 5px solid #00304d;
+    margin-left: 33px;
+}
+.claro .dijitTooltipDialog.dijitTooltipLeft .dijitTooltipContainer{
+    border-right: 5px solid #00304d;
+    margin-left: -53px;
+}
+.claro .dijitTooltipDialog.dijitTooltipAbove .dijitTooltipContainer{
+    border-bottom: 5px solid #00304d;
+    margin-bottom: 48px;
+}
+.claro .dijitTooltipDialog.dijitTooltipBelow .dijitTooltipContainer{
+    border-top: 5px solid #00304d;
+    margin-top: 38px;
+}
+.claro .dijitTooltipDialog .dijitTooltipConnector{
+    top: 0px;
+    bottom: 0px;
+    margin: auto;
+    background-image: none;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-right: 10px solid #00304d;
+    height: 0px;
+    width: 0px;
+}
+.claro .dijitTooltipDialog.dijitTooltipRight .dijitTooltipConnector{
+    top: 0px;
+    bottom: 0px;
+    margin: auto;
+    background-image: none;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-left: 0px solid transparent;
+    border-right: 50px solid #00304d;
+    transform: rotate(-10deg);
+    -webkit-transform: rotate(-10deg);
+    height: 0px;
+    width: 0px;
+}
+.claro .dijitTooltipDialog.dijitTooltipLeft .dijitTooltipConnector{
+    top: 0px;
+    bottom: 0px;
+    margin: auto;
+    background-image: none;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-left: 50px solid #00304d;
+    transform: rotate(10deg);
+    -webkit-transform: rotate(10deg);
+    height: 0px;
+    width: 0px;
+}
+.claro .dijitTooltipDialog.dijitTooltipAbove .dijitTooltipConnector{
+    top: auto;
+    bottom: 0px;
+    margin: 0 auto;
+    background-image: none;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-top: 50px solid #00304d;
+    transform: rotate(25deg);
+    -webkit-transform: rotate(25deg);
+    height: 0px;
+    width: 0px;
+}
+.claro .dijitTooltipDialog.dijitTooltipAbove.dijitTooltipABRight .dijitTooltipConnector{
+    top: auto;
+    bottom: 0px;
+    margin: 0 auto;
+    background-image: none;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-top: 50px solid #00304d;
+    transform: rotate(-25deg);
+    -webkit-transform: rotate(-25deg);
+    height: 0px;
+    width: 0px;
+}
+.claro .dijitTooltipDialog.dijitTooltipBelow .dijitTooltipConnector{
+    top: 0px;
+    margin: 0px auto;
+    margin-left: 10px;
+    background-image: none;
+    border-right: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-bottom: 50px solid #00304d;
+    transform: rotate(-15deg);
+    -webkit-transform: rotate(-15deg);
+    height: 0px;
+    width: 0px;
+}
+.claro .dijitTooltipDialog.dijitTooltipBelow.dijitTooltipABRight .dijitTooltipConnector{
+    top: 0px;
+    margin: 0 auto;
+    background-image: none;
+    border-right: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-bottom: 50px solid #00304d;
+    transform: rotate(25deg);
+    -webkit-transform: rotate(25deg);
+    height: 0px;
+    width: 0px;
+}*/

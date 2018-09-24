@@ -1,0 +1,34 @@
+<div class="search-scope-options">
+  <a href="#" class="scope-placeholder"
+    data-dojo-attach-point="scopePlaceholder"
+    data-dojo-attach-event="onClick: scopePlaceholderClicked">
+    <span data-dojo-attach-point="scopePlaceholderText"></span>
+    <span class="dropdown-arrow"></span>
+  </a>
+  <div class="btn-group" data-dojo-attach-point="btnGroup">
+    <button type="button" class="btn btn-sm btn-default" name="${id}_scope"
+      data-dojo-attach-point="MyContentToggle"
+      data-dojo-attach-event="onClick: optionClicked"
+      data-option-name="MyContent">
+      ${i18n.search.scopeOptions.myContent}
+    </button>
+    <button type="button" class="btn btn-sm btn-default" name="${id}_scope"
+      data-dojo-attach-point="MyOrganizationToggle"
+      data-dojo-attach-event="onClick: optionClicked"
+      data-option-name="MyOrganization">
+      ${i18n.search.scopeOptions.myOrganization}
+    </button>
+    <button type="button" class="btn btn-sm btn-default" name="${id}_scope"
+      data-dojo-attach-point="CuratedToggle"
+      data-dojo-attach-event="onClick: optionClicked"
+      data-option-name="Curated">
+      ${i18n.search.scopeOptions.curated}
+    </button>
+    <button type="button" class="btn btn-sm btn-default" name="${id}_scope"
+      data-dojo-attach-point="ArcGISOnlineToggle"
+      data-dojo-attach-event="onClick: optionClicked"
+      data-option-name="ArcGISOnline">
+      ${i18n.search.scopeOptions.ArcGISOnline}
+    </button>
+  </div>
+</div>

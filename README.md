@@ -1,9 +1,8 @@
-# oriented-imagery
-Imagery at any angle, for any location
+# Oriented Imagery
 
 Use the Oriented Imagery widget for Web AppBuilder to build web apps to explore non-nadir imagery from aerial, drone, or terrestrial sensors. App users select an oriented imagery catalog, click a location of interest on the map, then explore any available oblique, street-view, or inspection images that depict the area of interest using the inset viewer. As you pan and zoom in the non-nadir image, see the camera’s field of view dynamically updated on the map. 
 
-Oriented imagery catalogs can be created and managed using the Oriented Imagery ArcGIS Pro Add-In available for free on (ArcGIS Marketplace)[https://marketplace.arcgis.com/listing.html?id=19b5028e59c141239d0a262117639f81].
+Oriented imagery catalogs can be created and managed using the Oriented Imagery ArcGIS Pro Add-In available for free on [ArcGIS Marketplace](https://marketplace.arcgis.com/listing.html?id=19b5028e59c141239d0a262117639f81).
 
 ## Features
 
@@ -23,8 +22,8 @@ Features include:
 ## Instructions
 
 1. Download and unzip the Oriented Imagery rep ZIP file
-2. Download and install (Web AppBuilder for ArcGIS (Developer Edition))[https://developers.arcgis.com/web-appbuilder/guide/getstarted.htm]
-3. Follow the instructions for (custom widget deployment)[https://developers.arcgis.com/web-appbuilder/guide/deploy-custom-widget-and-theme.htm] 
+2. Download and install [Web AppBuilder for ArcGIS (Developer Edition)](https://developers.arcgis.com/web-appbuilder/guide/getstarted.htm)
+3. Follow the instructions for [custom widget deployment](https://developers.arcgis.com/web-appbuilder/guide/deploy-custom-widget-and-theme.htm]) 
 
 ## Requirements
 

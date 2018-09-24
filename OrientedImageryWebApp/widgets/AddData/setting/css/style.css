@@ -1,0 +1,53 @@
+.jimu-widget-add-data-setting .row {
+	/*margin-top: 20px;*/
+	margin-top: 10px;
+	font-size: 14px;
+}
+.jimu-widget-add-data-setting .row .left-cell {
+	display: inline-block;
+	width: 240px;
+}
+.jimu-widget-add-data-setting .indent {
+	margin-left: 20px;
+}
+.jimu-widget-add-data-setting .row .numbox {
+	width: 80px;
+}
+.jimu-widget-add-data-setting .example {
+	font-size: 10px;
+	font-style: italic;
+}
+.jimu-widget-add-data-setting .dijitTextBox.wide {
+	width: 24em;
+}
+.jimu-widget-add-data-setting .default-scope {
+  display: inline-block;
+}
+.jimu-widget-add-data-setting .default-scope .opt-text {
+  display: none;
+  color: #9B9B9B;
+  background-color: #F3F3F3;
+  font-size: 12px;
+  padding: 2px 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.jimu-widget-add-data-setting .default-scope.sel .opt-text {
+  display: inline-block;
+}
+.jimu-widget-add-data-setting .default-scope .opt-button {
+  display: none;
+  cursor: pointer;
+  font-size: 12px;
+  background-color: #24B5CC;
+  color: #ffffff;
+  padding: 2px 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.jimu-widget-add-data-setting .row:hover .default-scope .opt-button {
+  display: inline-block;
+}
+.jimu-widget-add-data-setting .row:hover .default-scope.sel .opt-button {
+  display: none;
+}

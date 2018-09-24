@@ -1,0 +1,51 @@
+<div class="secondary-pane add-url-pane">
+  <div class="add-url-pane-container">
+    <div class="add-url-pane-container--inner">
+      <label for="${id}_select">${i18n.addFromUrl.type}</label>
+      <select id="${id}_select"
+        data-dojo-type="dijit/form/Select" data-dojo-attach-point="typeSelect">
+        <option value="ArcGIS" selected="selected">${i18n.addFromUrl.types.ArcGIS}</option>
+        <option value="WMS">${i18n.addFromUrl.types.WMS}</option>
+        <!--not yet supported <option value="WMTS">${i18n.addFromUrl.types.WMTS}</option> -->
+        <!--not yet supported <option value="WFS">${i18n.addFromUrl.types.WFS}</option> -->
+        <option value="KML">${i18n.addFromUrl.types.KML}</option>
+        <option value="GeoRSS">${i18n.addFromUrl.types.GeoRSS}</option>
+        <option value="CSV">${i18n.addFromUrl.types.CSV}</option>
+      </select>
+      <label for="${id}_url">${i18n.addFromUrl.url}</label>
+      <input id="${id}_url" type="text" class="url-textbox jimu-input"
+          data-dojo-attach-point="urlTextBox">
+      <div class="action-bar">
+        <a class="jimu-float-leading" href="javascript:void(0)"
+          data-dojo-attach-point="examplesExpander"
+          data-dojo-attach-event="onClick: examplesExpanderClicked"
+          >${i18n.addFromUrl.samplesHint}</a>
+        <a class="jimu-btn"
+          href="javascript:void(0)"
+          data-dojo-attach-point="addButton"
+          data-dojo-attach-event="onClick: addClicked"
+          >${i18n.search.item.actions.add}
+        </a>
+      </div>
+      <div class="examples" data-dojo-attach-point="examplesNode">
+        <div data-examples-type="ArcGIS">
+          <div>http://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/World_Cities/FeatureServer/0</div>
+          <div>http://services.arcgisonline.com/ArcGIS/rest/services/Demographics/USA_Tapestry/MapServer</div>
+          <div>http://imagery.arcgisonline.com/ArcGIS/rest/services/LandsatGLS/VegetationAnalysis/ImageServer</div>
+        </div>
+        <div data-examples-type="WMS">
+          <div>http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi?service=WMS&amp;request=GetCapabilities</div>
+        </div>
+        <div data-examples-type="KML">
+          <div>http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month_age_animated.kml</div>
+        </div>
+        <div data-examples-type="GeoRSS">
+          <div>http://www.gdacs.org/xml/rss.xml</div>
+        </div>
+        <div data-examples-type="CSV">
+          <div>http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.csv</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div>
+    <span class="oi-widget-label">Oriented Image Catalog: </span><br/>
+    <select data-dojo-type="dijit/form/Select" class="oi-widget-select"  data-dojo-attach-point="selectOIC" >
+    </select>
+    <button class='oi-widget-addBtn' data-dojo-type='dijit/form/Button' data-dojo-attach-point='addBtn'>Add OIC</button>
+    <div class="oi-widget-checkBox">
+    <input data-dojo-type="dijit/form/CheckBox" data-dojo-attach-point="imagePoints" /> <span class="oi-widget-label">Image exposure points</span><br />
+    <svg class="oi-widget-svg" width="10" height="10"><circle cx="5" cy="5" r="5" style="fill: rgba(0,128,192,1);stroke-width:0;stroke:rgba(0,0,0,0)" /></svg>
+    </div>
+    <div class="oi-widget-checkBox">
+    <input data-dojo-type="dijit/form/CheckBox" class="oi-widget-checkBox" data-dojo-attach-point="currentCoverage" checked /> <span class="oi-widget-label">Current coverage</span><br/>
+    <svg class="oi-widget-svg" width="15" height="10"><polygon points="0,0 2.5,10 12.5,10 15,0" style="fill:rgba(255,102,102,0.5);stroke-width:0;stroke:rgb(0,0,0)" /></svg>
+    </div>
+    <div class="oi-widget-checkBox">
+    <input data-dojo-type="dijit/form/CheckBox" class="oi-widget-checkBox" data-dojo-attach-point="similarCoverage" /> <span class="oi-widget-label">Additional coverage</span><br />
+    <svg class="oi-widget-svg" width="15" height="10"><polygon points="0,0 2.5,10 12.5,10 15,0" style="fill:rgba(0,128,192,0.5);stroke-width:0;stroke:rgb(0,0,0)" /></svg>
+    </div>
+    <div class="oi-widget-checkBox">
+    <input data-dojo-type="dijit/form/CheckBox" class="oi-widget-checkBox" data-dojo-attach-point="allCoverage" /> <span class="oi-widget-label">Coverage map</span><br />
+    <svg class="oi-widget-svg" width="15" height="10"><polygon points="0,0 2.5,10 12.5,10 15,0" style="fill:rgba(0,200,0,0.5);stroke-width:0;stroke:rgb(0,0,0)" /></svg>
+    </div>
+    <div data-dojo-type="dijit/Dialog" data-dojo-attach-point="imageDialog" title="Imagery Viewer" class="oi-widget-dialog" data-dojo-props="focus:function(){}">
+        <div data-dojo-attach-point="oiviewer" style="width: 500px;height: 400px;"></div>
+    </div>
+    <div data-dojo-type='dijit/Dialog' data-dojo-attach-point='addOICDialog' title='Add OIC' class='oi-widget-dialog oi-widget-dialog-style'>
+        <label>Input: </label>
+        <select data-dojo-type="dijit/form/Select" data-dojo-attach-point="oicInputType">
+            <option value="url">OIC Item URL</option>
+            <option value="file">OIC File</option>
+        </select>
+        <div data-dojo-attach-point="urlInput" style="padding: 0.8em 0;"><span>OIC Item URL: </span><input type="text" data-dojo-attach-point="inputOICUrl"  data-dojo-type="dijit/form/TextBox" data-dojo-props="intermediateChanges:true" class="oi-widget-textBox"/></div>
+        <div data-dojo-attach-point="fileInput" style="padding: 0.8em 0;display: none;"><input data-dojo-attach-point="oicFile" type="file" name="oicFile" accept=".oic" /></div>
+        <div data-dojo-attach-point="errorNotify" style="display: none;color: red;padding-bottom: 0.8em;"></div>
+        <button data-dojo-type="dijit/form/Button" data-dojo-attach-point="addOICBtn" disabled class="oi-widget-addBtn oi-widget-centerBtn">Add</button>
+    </div>
+</div>

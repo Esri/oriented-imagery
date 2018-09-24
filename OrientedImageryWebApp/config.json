@@ -1,0 +1,344 @@
+{
+    "theme": {
+        "name": "LandsatTheme",
+        "styles": [
+            "default",
+            "black",
+            "blue",
+            "cyan",
+            "green",
+            "purple",
+            "red",
+            "yellow"
+        ],
+        "version": "2.3"
+    },
+    "portalUrl": "http://www.arcgis.com",
+    "appId": "",
+    "authorizedCrossOriginDomains": [],
+    "title": "Oriented Imagery Viewer",
+    "subtitle": "",
+    "keepAppState": true,
+    "logo": "http://www.esri.com/favicon.ico",
+    "geometryService": "http://utility.arcgisonline.com/arcgis/rest/services/Geometry/GeometryServer",
+    "links": [],
+    "widgetOnScreen": {
+        "panel": {
+            "uri": "themes/LandsatTheme/panels/SimpleBorderPanel/Panel",
+            "positionRelativeTo": "browser",
+            "position": {
+                "top": 0,
+                "left": 10,
+                "height": 140,
+                "width": 80
+            }
+        },
+        "widgets": [
+            {
+                "uri": "themes/LandsatTheme/widgets/HeaderController/Widget",
+                "position": {
+                    "left": 0,
+                    "width": 80,
+                    "top": 40,
+                    "bottom": 0,
+                    "relativeTo": "browser"
+                },
+                "version": "2.3"
+
+            },
+            {
+                "uri": "widgets/Scalebar/Widget",
+                "position": {
+                    "left": 10,
+                    "bottom": 10,
+                    "relativeTo": "map"
+                },
+                "version": "2.3",
+                "id": "widgets_Scalebar_Widget_2",
+                "name": "Scalebar"
+            },
+            {
+                "uri": "widgets/Search/Widget",
+                "position": {
+                    "left": 60,
+                    "top": 20,
+                    "relativeTo": "map"
+                },
+                "version": "2.3",
+                "id": "widgets_Search_Widget_3",
+                "name": "Search"
+            },
+            {
+                "uri": "widgets/Coordinate/Widget",
+                "position": {
+                    "left": 160,
+                    "bottom": 5,
+                    "relativeTo": "map"
+                },
+                "version": "2.3",
+                "id": "widgets_Coordinate_Widget_4",
+                "name": "Coordinate"
+            },
+           
+            {
+                "uri": "widgets/OverviewMap/Widget",
+                "position": {
+                    "right": 0,
+                    "top": 0,
+                    "zIndex": 1,
+                    "relativeTo": "map"
+                },
+                "version": "2.3",
+                "id": "widgets_OverviewMap_Widget_10",
+                "name": "OverviewMap"
+            },
+            
+            {
+                "uri": "widgets/HomeButton/Widget",
+                "position": {
+                    "left": 20,
+                    "top": 95,
+                    "relativeTo": "map"
+                },
+                "version": "2.3",
+                "id": "widgets_HomeButton_Widget_11",
+                "name": "HomeButton"
+            }
+
+
+
+
+
+        ],
+        "panel": {
+            "uri": "jimu/OnScreenWidgetPanel",
+            "position": {
+                "relativeTo": "map"
+            }
+        }
+    },
+    "map": {
+        "3D": false,
+        "2D": true,
+        "position": {
+            "top": 40,
+            "right": 10,
+            "bottom": 10,
+            "left": 80
+        },
+        "itemId": "06b2b4c398c74b27b1413f9b85893500",
+        "mapOptions": {
+            "maxZoom": 21,
+            "minZoom": 1,
+            "extent": {
+                "xmin": -13069590.083624298,
+                "ymin": 4017886.758757296,
+                "xmax": -13011497.942127643,
+                "ymax": 4051251.5216037305,
+                "spatialReference": {
+                    "wkid": 102100
+                }
+            }
+        },
+        "id": "map",
+        "portalUrl": "http://www.arcgis.com"
+    },
+    "widgetPool": {
+        "panel": {
+            "uri": "themes/LandsatTheme/panels/SimpleBorderPanel/Panel",
+            "positionRelativeTo": "map",
+            "noOverlay": false,
+            "position": {
+                "left": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+            }
+        },
+        "widgets": [
+         
+        ],
+        "groups": [
+            {
+                "widgets": [
+                    {
+                        "name": "OrientedImagery",
+                        "label": "Oriented Imagery",
+                        "version": "",
+                        "uri": "widgets/OrientedImagery/Widget",
+                        "index": 2,
+                        "id": "widgets/OrientedImagery/Widget_15"
+                    }
+                ],
+                "label": "Oriented Imagery",
+                "index": 0,
+                "panel": {
+                    "uri": "themes/LandsatTheme/panels/DialogPanel/Panel",
+                    "positionRelativeTo": "browser",
+                    "noOverlay": true,
+                    "position": {
+                        "width": 300,
+                        "height": 220
+
+                    }
+                },
+                "id": "_49",
+                "visible": true
+                
+
+            }, {
+                "widgets": [
+                    {
+                        "name": "Measurement",
+                        "label": "Measurement",
+                        "version": "1.1",
+                        "uri": "widgets/Measurement/Widget",
+                        "index": 8,
+                        "id": "widgets/Measurement/Widget_18"
+                    }
+                ],
+                "label": "Measurement",
+                "index": 4,
+                "panel": {
+                    "uri": "themes/LandsatTheme/panels/DialogPanel/Panel",
+                    "positionRelativeTo": "browser",
+                    "noOverlay": true,
+                    "position": {
+                        "width": 300,
+                        "height": 160
+
+                    }
+                },
+                "id": "_39",
+                "visible": true
+                
+            }, 
+            {
+                "widgets": [
+                    {
+                        "name": "About",
+                        "label": "About",
+                        "version": "1.1",
+                        "icon": "widgets/About/images/icon.png",
+                        "uri": "widgets/About/Widget",
+                        "config": "configs/About/config_About.json",
+                        "index": 9,
+                        "id": "widgets/About/Widget_16"
+                    }
+                ],
+                "label": "About",
+                "index": 10,
+                "panel": {
+                    "uri": "themes/LandsatTheme/panels/DialogPanel/Panel",
+                    "positionRelativeTo": "browser",
+                    "noOverlay": true,
+                    "position": {
+                        "width": 300,
+                        "height": 300
+
+                    }
+                },
+                "id": "_22",
+                "visible": true,
+                "icon": "widgets/About/images/icon.png"
+            }, {
+                "widgets": [
+                    {
+                        "name": "AddData",
+                        "label": "Add Data from ArcGIS Online",
+                        "version": "2.1",
+                        "icon": "widgets/AddData/images/icon.png",
+                        "uri": "widgets/AddData/Widget",
+                        "config": "widgets/AddData/config.json",
+                        "index": 4,
+                        "id": "widgets/AddData/Widget_16"
+                    }
+                ],
+                "label": "Add Data from ArcGIS Online",
+                "index": 3,
+                "panel": {
+                    "uri": "themes/LandsatTheme/panels/DialogPanel/Panel",
+                    "positionRelativeTo": "browser",
+                    "noOverlay": true,
+                    "position": {
+                        "width": 335,
+                        "height": 300
+
+                    }
+                },
+                "id": "_67",
+                "visible": true
+            },
+            {
+                "widgets": [
+                    {
+                        "name": "BasemapGallery",
+                        "label": "Basemap Gallery",
+                        "version": "1.1",
+                        "uri": "widgets/BasemapGallery/Widget",
+                        "config": "widgets/BasemapGallery/config.json",
+                        "index": 9,
+                        "id": "widgets/BasemapGallery/Widget_16"
+                    }
+                ],
+                "label": "Basemap Gallery",
+                "index": 9,
+                "panel": {
+                    "uri": "themes/LandsatTheme/panels/DialogPanel/Panel",
+                    "positionRelativeTo": "browser",
+                    "noOverlay": true,
+                    "position": {
+                        "width": 300,
+                        "height": 250
+
+                    }
+                },
+                "id": "_59",
+                "visible": true
+                
+            }
+
+        ]
+    },
+    "mobileLayout": {
+        "widgetOnScreen": {
+            "widgets": {
+                "widgets/Scalebar/Widget": {
+                    "position": {
+                        "left": 7,
+                        "bottom": 40
+                    },
+                    "version": "1.4"
+                },
+                "widgets/Coordinate/Widget": {
+                    "position": {
+                        "left": 7,
+                        "bottom": 17
+                    },
+                    "version": "1.4"
+                }
+            }
+        }
+    },
+    "loadingPage": {
+        "backgroundColor": "#151e27",
+        "backgroundImage": {
+            "visible": false
+        },
+        "loadingGif": {
+            "visible": true,
+            "uri": "configs/loading/images/loading.gif",
+            "width": 58,
+            "height": 29
+        }
+    },
+    "wabVersion": "2.3",
+    "isTemplateApp": true,
+    "isWebTier": false,
+    "httpProxy": {
+        "useProxy": true,
+        "alwaysUseProxy": false,
+        "url": "",
+        "rules": []
+    }
+}

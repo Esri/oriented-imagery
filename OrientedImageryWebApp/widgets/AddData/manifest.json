@@ -1,0 +1,15 @@
+{
+  "name": "AddData",
+  "label": "Add data from ArcGIS Online",
+  "platform": "HTML",
+  "version": "2.7",
+  "wabVersion": "2.7",
+  "author": "Esri",
+  "description": "",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {
+    "hasConfig": true,
+    "keepConfigAfterMapSwitched": false
+  }
+}

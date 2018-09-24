@@ -1,0 +1,58 @@
+<div class="search-data-type-options">
+  <div data-dojo-type="dijit/form/DropDownButton">
+    <span>${i18n.search.typeOptions.prompt}</span>
+    <div data-dojo-type="dijit/TooltipDialog"
+         data-dojo-attach-point="tooltipDialog"
+         data-dojo-props="'class':'add-data-widget-popup'">
+      <label for="${id}_mapServiceId" class="search-type-option">
+        <input id="${id}_mapServiceId"
+          data-dojo-type="dijit/form/CheckBox"
+          data-dojo-attach-point="mapServiceToggle"
+          data-dojo-attach-event="onClick: optionClicked"
+          data-option-q='type:&quot;Map Service&quot;'/>
+        ${i18n.search.typeOptions.mapService}
+      </label>
+      <label for="${id}_featureServiceId" class="search-type-option">
+        <input id="${id}_featureServiceId"
+          data-dojo-type="dijit/form/CheckBox"
+          data-dojo-attach-point="featureServiceToggle"
+          data-dojo-attach-event="onClick: optionClicked"
+          data-option-q='type:&quot;Feature Service&quot;'/>
+        ${i18n.search.typeOptions.featureService}
+      </label>
+      <label for="${id}_imageServiceId" class="search-type-option">
+        <input id="${id}_imageServiceId"
+          data-dojo-type="dijit/form/CheckBox"
+          data-dojo-attach-point="imageServiceToggle"
+          data-dojo-attach-event="onClick: optionClicked"
+          data-option-q='type:&quot;Image Service&quot;'/>
+        ${i18n.search.typeOptions.imageService}
+      </label>
+      <label for="${id}_vectorTileServiceId" class="search-type-option"
+        data-dojo-attach-point="vectorTileNode">
+        <input id="${id}_vectorTileServiceId"
+          data-dojo-type="dijit/form/CheckBox"
+          data-dojo-attach-point="vectorTileServiceToggle"
+          data-dojo-attach-event="onClick: optionClicked"
+          data-option-q='type:&quot;Vector Tile Service&quot;'/>
+        ${i18n.search.typeOptions.vectorTileService}
+      </label>
+      <label for="${id}_kmlId" class="search-type-option">
+        <input id="${id}_kmlId"
+          data-dojo-type="dijit/form/CheckBox"
+          data-dojo-attach-point="kmlToggle"
+          data-dojo-attach-event="onClick: optionClicked"
+          data-option-q='type:&quot;KML&quot;'/>
+        ${i18n.search.typeOptions.kml}
+      </label>
+       <label for="${id}_wmsId" class="search-type-option">
+        <input id="${id}_wmsId"
+          data-dojo-type="dijit/form/CheckBox"
+          data-dojo-attach-point="wmsToggle"
+          data-dojo-attach-event="onClick: optionClicked"
+          data-option-q='type:&quot;WMS&quot;'/>
+        ${i18n.search.typeOptions.wms}
+      </label>
+    </div>
+  </div>
+</div>
