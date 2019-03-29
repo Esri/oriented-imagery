@@ -1,0 +1,297 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: "launchpad-icons";
+    src:url("fonts/launchpad-icons.eot");
+    src:url("fonts/launchpad-icons.eot?#iefix") format("embedded-opentype"),
+        url("fonts/launchpad-icons.woff") format("woff"),
+        url("fonts/launchpad-icons.ttf") format("truetype"),
+        url("fonts/launchpad-icons.svg#launchpad-icons") format("svg");
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+[data-icon]:before {
+    font-family: "launchpad-icons" !important;
+    content: attr(data-icon);
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    speak: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="launchpad-icon-"]:before,
+[class*=" launchpad-icon-"]:before {
+    font-family: "launchpad-icons" !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    speak: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.launchpad-icon-plus:before {
+    content: "a";
+}
+.launchpad-icon-minus:before {
+    content: "b";
+}
+.oi-widget-dialog {
+    border-radius: 10px !important; 
+}
+.oi-widget-dialog-style {
+    min-width: 250px !important;
+}
+
+.oi-widget-dialog.dijitDialog {
+    background: #fff !important;
+    border: 0 none !important;
+    -webkit-box-shadow: 0 -1px 1px rgba(0,0,0,0.15),0 3px 5px rgba(0,0,0,0.25) !important;
+    box-shadow: 0 -1px 1px rgba(0,0,0,0.15),0 3px 5px rgba(0,0,0,0.25) !important;
+}
+.oi-widget-dialog .dijitDialogPaneContent {
+    background: #333333 !important;
+    padding: 10px !important;
+    border-top: 0 none !important;
+    position: relative !important;
+    -webkit-box-sizing: content-box !important;
+    box-sizing: content-box !important;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+    overflow: hidden !important;
+    float: none !important;
+    color: black !important;
+}
+.oi-widget-dialog-style .dijitDialogPaneContent {
+    background: #FFFFFF !important;
+}
+.oi-widget-dialog .dijitDialogPaneActionBar {
+    /* the bar at bottom with OK/Cancel buttons */
+    padding-top: 15px !important;
+    text-align: right !important;
+    position: relative !important;
+}
+.oi-widget-dialog .dijitTooltipDialog .dijitDialogPaneActionBar {
+    margin: 15px -10px -5px !important;
+}
+.oi-widget-dialog .dijitDialogPaneActionBar .dijitButton {
+    float: none !important;
+}
+.oi-widget-dialog .dijitDialogTitleBar {
+    /* outer container for the titlebar of the dialog */
+    background: #242424 !important;
+    border: 0 none !important;
+    border-bottom: 0 none !important;
+    padding: 7px 10px !important;
+    text-align: center !important;
+    line-height: 16px !important;
+    -webkit-box-sizing: content-box !important;
+    box-sizing: content-box !important;
+    max-height: 30px !important;
+}
+.oi-widget-dialog .dijitDialogTitle {
+    /* typography and styling of the dialog title */
+    font-size: 12px !important;
+    color: #ccc !important;
+}
+.oi-widget-dialog .dijitDialogCloseIcon {
+    /* the default close icon for the dialog */
+    width: 20px !important;
+    height: 20px !important;
+    background: none !important;
+    color: white !important;
+    line-height: 20px !important;
+    text-align: center !important;
+    position: absolute !important;
+    top: 6px !important;
+    right: 10px !important;
+    font-family: "landsat" !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
+    text-decoration: inherit !important;
+    vertical-align: middle !important;
+    opacity: 0.65;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=65)";
+    filter: alpha(opacity=65);
+}
+.oi-widget-dialog .dijitDialogCloseIcon:before {
+    content: url("../images/close_default.png");
+}
+.oi-widget-dialog .dijitDialogCloseIcon .closeText {
+    display: none;
+}
+.oi-widget-dialog .dijitDialogCloseIconHover,
+.oi-widget-dialog .dijitDialogCloseIconActive {
+    opacity:1;
+    -ms-filter: none;
+    filter: none;
+}
+.oi-widget-dialog .dijitDialogUnderlay {
+    background: #000;
+    opacity: 0.65;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=65)";
+    filter: alpha(opacity=65);
+}
+.oi-widget-label {
+    color: #333 !important;
+    font-size: 14px !important;
+}
+.oi-widget-checkBox {
+    padding-top: 5px !important;
+    padding-left: 5px !important;
+}
+.oi-widget-svg {
+    margin-top: 3px;
+    margin-left: 20px;
+}
+/*.oi-widget-checkBox.dijitCheckBox {
+    margin-left: 5px;
+}*/
+.oi-widget-addBtn {
+    width: auto !important;
+    border: 1px solid #ddd !important;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: all 0.05s linear;
+    transition: all 0.05s linear;
+    cursor: pointer !important;
+    /*    font-size: 0.9375rem;*/
+}
+.oi-widget-addBtn:hover{
+    background: #ddd !important;
+}
+.oi-widget-addBtn.dijitButton .dijitButtonNode {
+    padding: 0.2rem 0.4rem !important;
+    border: 0px transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+.oi-widget-centerBtn.dijitButton .dijitButtonNode {
+    color: black !important;
+    min-width: 50px !important;
+}
+.oi-widget-addBtn  .dijitButtonContents {
+    padding: 5px !important;
+}
+.oi-widget-centerBtn {
+    display: block;
+    width: 50px !important;
+    min-width: 50px !important;
+    margin: 0 auto !important;
+}
+.oi-widget-addBtn:disabled  {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+.oi-widget-addBtn .dijitButtonText {
+    padding: 0px;
+}
+.cmt .viewer .cmtNavBarPanel{
+    z-index: 2;
+}
+.cmt .measurement-floating-panel{
+    z-index: 2;
+}
+.oi-widget-select {
+    margin-top: 5px !important;
+    background: white !important; 
+    border: 1px solid #ddd !important;
+    height: 30px !important;
+}
+.oi-widget-select .dijitSelect .dijitInputField{
+    padding: 1px 10px !important;
+}
+.oi-widget-select .dijitSelectHover {
+    background-color: white !important;
+    border-color: #b5bcc7 !important;
+}
+.oi-widget-select .dijitSelectHover .dijitArrowButton{
+    background-color:rgba(39,178,207,0.5) !important;
+    border-color:rgba(39,178,207,0.5) !important;
+}
+
+.oi-widget-select .dijitSelectFocused {
+    border-color: #b5bcc7 !important;
+}
+.oi-widget-select .dijitSelectFocused .dijitArrowButton{
+    background-color:rgba(39,178,207,0.5) !important;
+    border-color:rgba(39,178,207,0.5) !important;
+}
+.oi-widget-select .dijitMenu .dijitMenuItemSelected td{
+    background-color:rgba(39,178,207,0.5) !important;
+    border-color:rgba(39,178,207,0.5) !important;
+}
+/*
+.oi-widget-checkBox .dijitCheckBox {
+    background-image: none !important;
+    background-color: transparent !important;
+    border: 1px solid #4d4d4d !important;
+    width: 14px !important;
+    height: 14px !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    text-align: center !important;
+    position: relative !important;
+    overflow: visible !important;
+}
+.oi-widget-checkBox .dijitCheckBox input {
+    position: absolute !important;
+    top: 0 !important;
+}
+.oi-widget-checkBox .dijitCheckBoxIcon:before {
+    font-family: verdana !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
+    text-decoration: inherit !important;
+    vertical-align: middle !important;
+    content: "\2713" !important;
+    line-height: 1 !important;
+    color:#27b2cf !important;
+}
+.oi-widget-checkBox .dijitCheckBoxChecked,
+.oi-widget-checkBox .dijitCheckBoxCheckedDisabled {
+    background-color:#27b2cf !important;
+    border-color: #27b2cf !important;
+}
+.oi-widget-checkBox .dijitCheckBoxChecked:before,
+.oi-widget-checkBox .dijitCheckBoxCheckedDisabled:before {
+    font-family: "landsat" !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
+    text-decoration: inherit !important;
+    vertical-align: middle !important;
+    content: "\2713" !important;
+    line-height: 1 !important;
+    color: #fff !important;
+    font-size: 10px !important;
+}
+.oi-widget-checkBox .dijitCheckBoxIcon {
+    padding: 0 !important;
+}
+.oi-widget-checkBox .dijitCheckBoxChecked {
+    border: 1px solid transparent !important;
+}
+.oi-widget-checkBox .dijitCheckBoxHover {
+    border: 1px solid #007ac2 !important;
+}
+.oi-widget-checkBox .dijitCheckBoxCheckedHover {
+    border: 1px solid #007ac2 !important;
+}
+.oi-widget-checkBox .dijitCheckBoxDisabled,
+.oi-widget-checkBox .dijitCheckBoxCheckedDisabled {
+    opacity: 0.65;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=65)";
+    filter: alpha(opacity=65);
+}*/
