@@ -4,7 +4,7 @@ Use the Oriented Imagery widget for Web AppBuilder to build web apps to explore 
 
 Oriented imagery in ArcGIS is managed using oriented imagery catalogs (OICs). To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro for free from [ArcGIS Marketplace](https://marketplace.arcgis.com/listing.html?id=19b5028e59c141239d0a262117639f81). To create and manage your own OICs, download the Oriented Imagery Management Tools from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=36ee0bbedca64a5a8b68d7c69ab51728).
 
-The OIC is defined as a JSON that references point based feature service that defines the camera location and orientation as well as metadata. This repo also contains a [description of the oriented imagery catalog schema](https://github.com/ArcGIS/oriented-imagery/blob/master/OrientedImageryCatalog_Schema/Oriented%20Imagery%20Catalog_Schema%20Documentation.pdf) for use in developing your own custom applications.
+This repo also contains a [description of the oriented imagery catalog schema](https://github.com/ArcGIS/oriented-imagery/blob/master/OrientedImageryCatalog_Schema/Oriented%20Imagery%20Catalog_Schema%20Documentation.pdf) for use in developing your own custom applications. The OIC is defined as a JSON that references a point-based feature service that defines the camera location, orientation, and image metadata. 
 
 ![App](Images/OrientedImageryExampleApp.png)
 
