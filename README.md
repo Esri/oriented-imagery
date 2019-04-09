@@ -37,7 +37,7 @@ Features include:
 ## Resources
 
 * [Web App Builder for ArcGIS (Developer Edition)](https://developers.arcgis.com/web-appbuilder/)
-* [Oriented Imagery example web app]()
+* [Oriented Imagery example web app](https://www.esriurl.com/orientedimageryapp)
 
 ## Issues
 
