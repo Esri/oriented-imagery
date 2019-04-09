@@ -1,6 +1,6 @@
 # Oriented Imagery
 
-Use the Oriented Imagery widget for Web AppBuilder to build web apps to explore oriented imagery (imagery not pointing straight down at the ground) from aerial, drone, or terrestrial sensors. App users select an oriented imagery catalog, click a location of interest on the map, then explore any available oblique, street-view, or inspection images that depict the area of interest using the inset viewer. As you pan and zoom in the oriented image, see the camera’s field of view dynamically updated on the map. 
+Use the Oriented Imagery widget for Web AppBuilder for ArcGIS to build web apps to explore oriented imagery (imagery not pointing straight down at the ground) from aerial, drone, or terrestrial sensors. App users select an oriented imagery catalog, click a location of interest on the map, then explore any available oblique, street-view, or inspection images that depict the area of interest using the inset viewer. As you pan and zoom in the oriented image, see the camera’s field of view dynamically updated on the map. 
 
 Oriented imagery in ArcGIS is managed using oriented imagery catalogs (OICs). To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro for free from [ArcGIS Marketplace](https://marketplace.arcgis.com/listing.html?id=19b5028e59c141239d0a262117639f81). To create and manage your own OICs, download the Oriented Imagery Management Tools from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=36ee0bbedca64a5a8b68d7c69ab51728).
 
