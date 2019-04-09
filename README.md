@@ -2,9 +2,13 @@
 
 Use the Oriented Imagery widget for Web AppBuilder to build web apps to explore non-nadir imagery from aerial, drone, or terrestrial sensors. App users select an oriented imagery catalog, click a location of interest on the map, then explore any available oblique, street-view, or inspection images that depict the area of interest using the inset viewer. As you pan and zoom in the non-nadir image, see the camera’s field of view dynamically updated on the map. 
 
-Oriented imagery catalogs can be created and managed using the Oriented Imagery ArcGIS Pro Add-In available for free on [ArcGIS Marketplace](https://marketplace.arcgis.com/listing.html?id=19b5028e59c141239d0a262117639f81).
+Oriented imagery in ArcGIS is managed using oriented imagery catalogs (OICs). To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro for free from [ArcGIS Marketplace](https://marketplace.arcgis.com/listing.html?id=19b5028e59c141239d0a262117639f81). To create and manage your own OICs, download the Oriented Imagery Management Tools from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=36ee0bbedca64a5a8b68d7c69ab51728).
 
-## Features
+The OIC is defined as a JSON that references point based feature service that defines the camera location and orientation as well as metadata. This repo also contains a description of the oriented imagery catalog schema for use in developing your own custom applications.
+
+![App](Images/OrientedImageryExampleApp.png)
+
+## Widget features
 
 Features include:
 * Build custom Oriented Imagery apps with no programming required
@@ -21,7 +25,7 @@ Features include:
 
 ## Instructions
 
-1. Download and unzip the Oriented Imagery rep ZIP file
+1. Download and unzip the Oriented Imagery repo ZIP file
 2. Download and install [Web AppBuilder for ArcGIS (Developer Edition)](https://developers.arcgis.com/web-appbuilder/guide/getstarted.htm)
 3. Follow the instructions for [custom widget deployment](https://developers.arcgis.com/web-appbuilder/guide/deploy-custom-widget-and-theme.htm]) 
 
