@@ -12,7 +12,6 @@ This repo also contains a [description of the oriented imagery catalog (OIC) sch
 
 ## Widget features
 
-Features include:
 * Build custom Oriented Imagery apps with no programming required
 * Support for standard frame, panoramic, or omnidirectional cameras (among others) 
 * A built-in viewer for non-nadir imagery, or the option to integrate a custom imagery viewer
