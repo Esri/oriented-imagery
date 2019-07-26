@@ -1,6 +1,6 @@
 # Oriented Imagery
 
-This repo contains developer resources for Oriented Imagery, including 2D and 3D Web AppBuilder widgets, a description of the Oriented Imagery API, and a schema for oriented imagery catalogs (OICs). Learn more about [Oriented Imagery](https://docdev.arcgis.com/en/imagery/workflows/resources/managing-and-visualizing-oriented-imagery.htm) on the Imagery Workflows site.
+This repo contains developer resources for Oriented Imagery, including 2D and 3D Web AppBuilder widgets, a description of the Oriented Imagery API, and a schema for oriented imagery catalogs (OICs). Learn more about [Oriented Imagery](https://doc.arcgis.com/en/imagery/workflows/resources/managing-and-visualizing-oriented-imagery.htm) on the Imagery Workflows site.
 
 Use the Oriented Imagery widgets for Web AppBuilder for ArcGIS to build web apps to explore oriented imagery (imagery not pointing straight down at the ground) from aerial, drone, or terrestrial sensors. App users select an oriented imagery catalog, click a location of interest on the map, then explore any available oblique, street-view, or inspection images that depict the area of interest using the inset viewer. As you pan and zoom in the oriented image, see the camera’s field of view dynamically updated on the map. Check out examples of a [2D app](https://oi.geocloud.com/app/index.html) and a [3D app](https://oi.geocloud.com/app3D/index.html) built with the widgets.
 
