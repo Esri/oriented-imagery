@@ -1,0 +1,33 @@
+<div style="width:100%;height:100%;">
+    <span class="oi-settings-label">${nls.addOIC}: </span>
+    <div class="oi-settings-container">
+        <div data-dojo-attach-point="agolInput">
+            <div data-dojo-attach-point="itemNotify" style="display: block;color: red;padding-bottom: 0.8em;"></div>
+            <table style="border: 0px solid transparent;">
+                <tr><td><label>${nls.from}: </label></td>
+                    <td><select data-dojo-type="dijit/form/Select" data-dojo-attach-point="agolContentSelect" style="width: 200px;">
+                            <option value="content">${nls.content}</option>
+                            <option value="group">${nls.groups}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label data-dojo-attach-point="folderGroupLabel">${nls.folder}: </label></td>
+                    <td><select data-dojo-type="dijit/form/Select" data-dojo-attach-point="agolFolderList" style="width: 200px;"></select></td>
+                </tr>
+                <tr>
+                    <td><label>${nls.oic}: </label></td>
+                    <td><select  data-dojo-type="dijit/form/Select" data-dojo-attach-point="agolOICList" style="width: 200px;"></select></td>
+                    <td><button data-dojo-type="dijit/form/Button" data-dojo-attach-point="addBtn" disabled class="oi-settings-btn">${nls.add}</button></td>
+                </tr>
+            </table>
+
+        </div>
+        <div data-dojo-attach-point="dataGrid" class="oi-settings-dataGrid"></div><button data-dojo-type="dijit/form/Button" data-dojo-attach-point="deleteBtn" disabled class="oi-settings-btn" style="position: absolute;display: inline-block;">${nls.delete}</button>
+        <div data-dojo-attach-point="errorNotify" style="display: none;color: red;"></div>
+        <div style="margin-top: 0.8em;">
+            <input type="checkbox" data-dojo-type="dijit/form/CheckBox" data-dojo-attach-point="allowAddOIC"/><label style="margin-left: 5px;">${nls.allowUser}</label>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,215 @@
+@charset "UTF-8";
+@import "calcite-web.css";
+@font-face {
+    font-family: "launchpad-icons";
+    src:url("fonts/launchpad-icons.eot");
+    src:url("fonts/launchpad-icons.eot?#iefix") format("embedded-opentype"),
+        url("fonts/launchpad-icons.woff") format("woff"),
+        url("fonts/launchpad-icons.ttf") format("truetype"),
+        url("fonts/launchpad-icons.svg#launchpad-icons") format("svg");
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+[data-icon]:before {
+    font-family: "launchpad-icons" !important;
+    content: attr(data-icon);
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    speak: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="launchpad-icon-"]:before,
+[class*=" launchpad-icon-"]:before {
+    font-family: "launchpad-icons" !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    speak: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.launchpad-icon-plus:before {
+    content: "a";
+}
+.launchpad-icon-minus:before {
+    content: "b";
+}
+.launchpad-icon-check:before {
+    content: "k";
+}
+
+
+.cmt .viewer .cmtNavBarPanel{
+    z-index: 2;
+}
+.cmt .measurement-floating-panel{
+    z-index: 2;
+}
+.oi-widget-selectBtn.btn-clear:hover:not(.oi-widget-selectBtnSelected) {
+    color: #0079c1;
+    background: #ffffff;
+    border-color: #0079c1;
+}
+.oi-widget-selectBtnSelected {
+    color: #ffffff;
+    background: #005e95;
+    border-color: #005e95;
+}
+.oi-widget-label {
+    color: #333;
+    font-size: 14px;
+}
+.oi-widget-checkBox {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+.oi-widget-checkBox .dijitCheckBox {
+    background-image: none;
+    background-color: transparent;
+    border: 1px solid #a9a9a9;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
+    padding: 0;
+    text-align: center;
+    position: relative;
+    overflow: visible;
+}
+.oi-widget-checkBox .dijitCheckBox input {
+    position: absolute;
+    top: 0;
+    margin: 0;
+}
+.oi-widget-checkBox .dijitCheckBoxIcon:before {
+    font-family: verdana;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    text-decoration: inherit;
+    vertical-align: middle;
+    content: "\2713";
+    line-height: 1;
+    color:#27b2cf;
+}
+.oi-widget-checkBox .dijitCheckBoxChecked,
+.oi-widget-checkBox .dijitCheckBoxCheckedDisabled {
+    background-color:#005e95;
+    border-color: #005e95;
+}
+.oi-widget-checkBox .dijitCheckBoxChecked:before,
+.oi-widget-checkBox .dijitCheckBoxCheckedDisabled:before {
+    font-family: "launchpad-icons";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    text-decoration: inherit;
+    vertical-align: middle;
+    content: "k";
+    line-height: 1px;
+    color: #fff;
+    font-size: 14px;
+}
+.oi-widget-checkBox .dijitCheckBoxIcon {
+    padding: 0;
+}
+.oi-widget-checkBox .dijitCheckBoxChecked {
+    border: 1px solid transparent;
+}
+.oi-widget-checkBox .dijitCheckBoxHover {
+    border: 1px solid #005e95;
+}
+.oi-widget-checkBox .dijitCheckBoxCheckedHover {
+    border: 1px solid #005e95;
+}
+.oi-widget-checkBox .dijitCheckBoxDisabled,
+.oi-widget-checkBox .dijitCheckBoxCheckedDisabled {
+    opacity: 0.65;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=65)";
+    filter: alpha(opacity=65);
+}
+
+.oi-widget-svg {
+
+    margin-left: 0.5em;
+}
+.oi-widget-marginLeft {
+    margin-left: 0.5em;
+}
+.oi-widget-dialog {
+    z-index: 1;
+    max-height: 85%;
+}
+.oi-widget-dialog .dijitDialogTitle {
+    font-size: 12px;
+    color: black;
+}
+
+.oi-widget-dialog .dijitDialogCloseIcon {
+    width: 20px;
+    height: 20px;
+    background: none;
+    color: white;
+    line-height: 20px;
+    text-align: center;
+    position: absolute;
+    top: 6px;
+    right: 5px;
+    font-family: "landsat";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    text-decoration: inherit;
+    vertical-align: middle;
+    opacity: 0.65;
+    outline:none;
+}
+.oi-widget-dialog .dijitDialogCloseIcon:before {
+    content: url(../images/cancel.svg);
+}
+.oi-widget-dialog .dijitDialogCloseIconHover {
+    opacity: 0.45;
+}
+.oi-widget-dialog.dijitDialog {
+    background: #fff;
+    border: 0 none;
+    -webkit-box-shadow: 0 -1px 1px rgba(0,0,0,0.15), 0 3px 5px rgba(0,0,0,0.25);
+    box-shadow: 0 -1px 1px rgba(0,0,0,0.15), 0 3px 5px rgba(0,0,0,0.25);
+}
+.oi-widget-dialog .dijitDialogTitleBar {
+        background: #f3f3f3;
+    border: 0 none;
+    border-bottom: 0 none;
+    padding: 7px 10px;
+    text-align: center;
+    line-height: 16px;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+}
+.oi-widget-dialog .dijitDialogPaneContent{
+    padding: 10px;
+    background: #ffffff;
+    border-top: 0 none;
+    -webkit-box-sizing: content-box;
+    overflow: auto;
+    box-sizing: content-box;
+}
+.oi-widget-hide {
+    display: none;
+}
+.oi-widget-centerBtn {
+    margin: auto;
+    display: block
+}
+select {
+    max-width: 200px !important;
+}
