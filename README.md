@@ -40,7 +40,7 @@ To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro 
 ## Resources
 
 * [Web App Builder for ArcGIS (Developer Edition)](https://developers.arcgis.com/web-appbuilder/)
-* [Oriented Imagery example web app](https://www.esriurl.com/orientedimageryapp)
+* Examples of a [2D app](https://oi.geocloud.com/app/index.html) and a [3D app](https://oi.geocloud.com/app3D/index.html) built with Oriented Imagery widgets
 
 ## Issues
 
