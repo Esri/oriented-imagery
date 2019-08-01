@@ -35,7 +35,7 @@ define([
     "esri/layers/WMSLayer",
     "esri/layers/KMLLayer",
     "esri/layers/VectorTileLayer",
-    "https://oi.geocloud.com/api/v1.1/main.js",
+    "https://oi.geocloud.com/api/v2.0/main.js",
     "dijit/form/Select",
     "dijit/form/Button",
     "dijit/form/CheckBox",
