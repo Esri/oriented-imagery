@@ -1,0 +1,10 @@
+{
+	"Parameters": {
+	    "RasterPath": "",
+		"MetadataFolder": "",
+		"Prefix": "",
+		"Suffix": "",
+		"AverageZ(meters)": "",
+		"SRS(wkid)": ""
+	}
+}

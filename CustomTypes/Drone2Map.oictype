@@ -1,0 +1,36 @@
+{
+	"Parameters": {
+	    "RasterPath": "",
+		"Drone2Map Camera File": "",
+		"Drone2Map Image List": "",
+		"Imagery Type": "",
+		"Input Images SRS (WKID)": "",
+		"Terrain Average Elevation": ""		
+	}
+	"DefaultAttributes": {
+		"Oblique": {
+			"CamHeading": "",
+			"CamPitch": "",
+			"CamRoll": "0",
+			"HFOV": "",
+			"VFOV": "",
+			"AvgHtAG": "",
+			"FarDist": "",
+			"NearDist": "",
+			"OIType": "O",
+			"MaxDist": "300"
+		},
+		"Nadir": {
+			"CamHeading": "",
+			"CamPitch": "0",
+			"CamRoll": "0",
+			"HFOV": "",
+			"VFOV": "",
+			"AvgHtAG": "",
+			"FarDist": "",
+			"NearDist": "",
+			"OIType": "T",
+			"MaxDist": "500"
+		}		
+	}		
+}

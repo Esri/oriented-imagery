@@ -1,0 +1,10 @@
+{
+	"Parameters": {
+	    "RasterPath": "",
+		"MetadataFile": "",
+		"Prefix": "",
+		"Suffix": "",
+		"RotatedCameras": "",
+		"AverageZ(meters)": ""
+	}
+}

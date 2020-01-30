@@ -1,0 +1,11 @@
+{
+	"Parameters": {
+	    "RasterPath": "",
+		"MetadataFile": "",
+		"Prefix": "",
+		"Suffix": "",
+		"RotatedCameras": "",
+		"AverageZ(meters)": "",
+		"Nadir Type(Panchromatic/MS)": ""
+	}
+}

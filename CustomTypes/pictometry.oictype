@@ -1,0 +1,24 @@
+{
+	"Parameters": {
+		"InputFile": "",
+		"PathToImage": "",
+		"PixelSize(Microns)": "5.5",
+		"AverageTerrainHeight(Meters)": "0",
+		"HorizontalWKID": "",
+		"VeritcalWKID": ""
+	},
+	"DefaultAttributes": {
+		"Oblique": {
+			"CamHeading": "",
+			"CamPitch": "50",
+			"CamRoll": "0",
+			"HFOV": "60",
+			"VFOV": "40",
+			"AvgHtAG": "1200",
+			"FarDist": "200",
+			"NearDist": "20",
+			"OIType": "O",
+			"MaxDist": "100"
+		}
+	}
+}
