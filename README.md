@@ -21,8 +21,9 @@ To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro 
 * Fieldnames are now case insensitive in the Oriented Imagery API.
 * In the API, measurement tools automatically turn on and off based on accuracy and depth info.
 
+## Working with the widgets
 
-## Widget features
+### Widget features
 
 * Build custom Oriented Imagery apps with no programming required
 * Support for standard frame, panoramic, or omnidirectional cameras (among others) 
@@ -36,18 +37,18 @@ To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro 
 * API to help 3rd party developers
 
 
-## Instructions for using the widgets
+### Instructions for using the widgets
 
 1. Download and unzip the Oriented Imagery repo ZIP file
 2. Download and install [Web AppBuilder for ArcGIS (Developer Edition)](https://developers.arcgis.com/web-appbuilder/guide/getstarted.htm)
 3. Follow the instructions for [custom widget deployment](https://developers.arcgis.com/web-appbuilder/guide/deploy-custom-widget-and-theme.htm) 
 
-## Requirements
+### Requirements
 
 * ArcGIS Online account
 * Web AppBuilder for ArcGIS 2.9+ Developer Edition
 
-## Resources
+### Resources
 
 * [Web App Builder for ArcGIS (Developer Edition)](https://developers.arcgis.com/web-appbuilder/)
 * Examples of a [2D app](https://oi.geocloud.com/app/index.html) and a [3D app](https://oi.geocloud.com/app3D/index.html) built with Oriented Imagery widgets
