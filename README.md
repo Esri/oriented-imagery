@@ -13,7 +13,7 @@ To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro 
 ![App](OrientedImageryExampleApp.png)
 
 
-## What's new in the Oriented Imagery API
+## What's new in Oriented Imagery developer resources
 
 ### Version 2.1 (release January 2020)
 
