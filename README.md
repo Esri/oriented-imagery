@@ -13,9 +13,9 @@ To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro 
 ![App](OrientedImageryExampleApp.png)
 
 
-##What's new in the Oriented Imagery API
+## What's new in the Oriented Imagery API
 
-###Version 2.1 (release January 2020)
+### Version 2.1 (release January 2020)
 
 * [Custom Oriented Imagery Types](https://github.com/Esri/oriented-imagery/tree/master/CustomTypes) are now available for download.
 * Fieldnames are now case insensitive in the Oriented Imagery API.
