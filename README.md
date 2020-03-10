@@ -15,6 +15,16 @@ To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro 
 
 ## What's new in Oriented Imagery developer resources
 
+### Version 2.2 (release March 2020)
+
+* When digitizing in the web app, the user will now be prompted to add ImgUrn and ImgGeom fields to the feature service if they're not already there.
+* The Oriented Imagery API now includes the following:
+	- Support for using a feature service with attachments as your data source.
+	- Option to digitize features with measurement ON.
+	- New navigation tool.
+	- If the OIC includes an acquisition date, the date is displayed in the viewer.
+	- Bug fixes for auto switch mode and for when near distance = 0.
+
 ### Version 2.1 (release January 2020)
 
 * [Custom Oriented Imagery Types](https://github.com/Esri/oriented-imagery/tree/master/CustomTypes) are now available for download.
@@ -45,7 +55,7 @@ To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro 
 
 ### Requirements
 
-* ArcGIS Online account
+* ArcGIS Online or ArcGIS Enterprise portal account
 * Web AppBuilder for ArcGIS 2.9+ Developer Edition
 
 ### Resources
