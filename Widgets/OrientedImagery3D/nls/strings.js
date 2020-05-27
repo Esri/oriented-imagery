@@ -39,7 +39,12 @@ define({
      error3: "Error! Request to OIC Item failed.",
      error4: "Error! Invalid OIC.",
      error5: "Error! Item type is not OIC.",
-     error6: "Error! Please enter a valid OIC item url."
+     error6: "Error! Please enter a valid OIC item url.",
+	 fieldAddMsg: "Image Coordinates will not be stored. For precise editing in Image Space, please add the following fields",
+	 addField: "Add fields?",
+	 cancel: "Cancel",
+	 samples: "Samples",
+	 orgGroups: "My Org Groups"
     }
      
 });
