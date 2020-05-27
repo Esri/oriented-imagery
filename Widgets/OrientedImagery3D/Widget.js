@@ -20,7 +20,7 @@ define([
     'jimu/BaseWidget',
     "dojo/_base/lang", "dojo/Deferred",
     'dojo/dom-construct', "dojo/dom-class", "dojo/dom", "dojo/on",
-    "dojo/dom-style", "esri/tasks/support/Query", "esri/tasks/QueryTask", "esri/request", "esri/layers/Layer",
+    "dojo/dom-style", "esri/identity/IdentityManager", "esri/tasks/support/Query", "esri/tasks/QueryTask", "esri/request", "esri/layers/Layer",
     "dojo/html", "dojox/layout/ResizeHandle", "esri/geometry/Extent", "esri/tasks/GeometryService", "esri/tasks/support/ProjectParameters",
     "esri/geometry/Polygon", "esri/geometry/Mesh", "esri/geometry/SpatialReference", "esri/portal/Portal", "esri/geometry/geometryEngine",
     "esri/Camera",
@@ -30,7 +30,7 @@ define([
     "esri/layers/WMTSLayer",
     "esri/layers/WMSLayer",
     "esri/layers/KMLLayer", "dijit/registry",
-    "https://oi.geocloud.com/api/v2.0/main.js",
+    "https://oi.geocloud.com/api/v2.3/main.js",
     "dijit/form/Select",
     "dijit/form/Button",
     "dijit/form/CheckBox",
@@ -43,7 +43,7 @@ define([
                 template,
                 BaseWidget,
                 lang, Deferred,
-                domConstruct, domClass, dom, on, domStyle, Query, QueryTask, esriRequest, Layer, html, ResizeHandle, Extent, GeometryService, ProjectParameters, Polygon, Mesh, SpatialReference, arcgisPortal, geometryEngine, Camera, Graphic, Point, Polyline, Multipoint, watchUtils, FeatureForm, GraphicsLayer, FeatureLayer, WMTSLayer, WMSLayer, KMLLayer, registry) {
+                domConstruct, domClass, dom, on, domStyle, IdentityManager, Query, QueryTask, esriRequest, Layer, html, ResizeHandle, Extent, GeometryService, ProjectParameters, Polygon, Mesh, SpatialReference, arcgisPortal, geometryEngine, Camera, Graphic, Point, Polyline, Multipoint, watchUtils, FeatureForm, GraphicsLayer, FeatureLayer, WMTSLayer, WMSLayer, KMLLayer, registry) {
 
             var clazz = declare([BaseWidget, _WidgetsInTemplateMixin], {
                 templateString: template,
@@ -52,6 +52,7 @@ define([
                 oiApiLoaded: false,
                 activeImageID: null,
                 widgetOpen: false,
+				graphicsType: "3d",		   
                 selectLocationFlag: false,
                 vectorLayerAdded: [],
                 layerVisibleStatus: {g: [], b: [], o: []},
@@ -96,11 +97,13 @@ define([
                         this.showHideInput(this.oicInputType.value);
                     }));
                     this.agolContentSelect.addEventListener("change", lang.hitch(this, function () {
-                        if (this.agolContentSelect.value === "group")
+                        if (this.agolContentSelect.value === "group" || this.agolContentSelect.value === "orgGroups") {
                             html.set(this.folderGroupLabel, this.nls.group + ": ");
-                        else
+						}
+                        else if (this.agolContentSelect.value === "content") {																						
                             html.set(this.folderGroupLabel, this.nls.folder + ": ");
-                        this.populateFolderGroupList(this.agolContentSelect.value);
+                        }
+						this.populateFolderGroupList(this.agolContentSelect.value);
                     }));
                     this.agolFolderList.addEventListener("change", lang.hitch(this, function () {
                         this.populateOICList(this.agolFolderList.value);
@@ -111,6 +114,9 @@ define([
                     this.inputOICUrl.addEventListener("change", lang.hitch(this, function () {
                         this.setDisabledProperty(this.inputOICUrl.value);
                     }));
+					this.sampleOICList.addEventListener("change", lang.hitch(this, function () {
+                        this.setDisabledProperty(this.sampleOICList.value);
+                    }));																						  				
                     this.oicFile.addEventListener("change", lang.hitch(this, this.readOICFile));
                     this.addOICBtn.addEventListener("click", lang.hitch(this, this.checkInput));
 
@@ -177,6 +183,69 @@ define([
                     this.setupResizeHandle();
                     this.geometryService = new GeometryService({url: "https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer"});
 
+					this.addFieldBtn.addEventListener('click', lang.hitch(this, function () {
+                var url = this.addFieldVectorLayer.url.substring(0, this.addFieldVectorLayer.url.indexOf('rest/') + 4);
+                url = url + '/admin/';
+                url = url + this.addFieldVectorLayer.url.substring(this.addFieldVectorLayer.url.indexOf('rest/') + 5) + '/addToDefinition';
+
+                if (this.listofFieldstoAdd.length > 0) {
+                    var fields = [];
+                    for (var i = 0; i < this.listofFieldstoAdd.length; i++) {
+                        fields.push({
+                            "name": this.listofFieldstoAdd[i],
+                            "type": "esriFieldTypeString",
+                            "alias": this.listofFieldstoAdd[i],
+                            "nullable": true,
+                            "editable": true,
+                            "length": 1000
+                        });
+
+
+                    }
+                    var fieldsToAdd = {};
+                    fieldsToAdd.fields = fields;
+                }
+                if (this.preserveToken && this.preserveToken.token) {
+
+                    esriRequest(url + '?token=' + this.preserveToken.token, {
+                        query: {
+                            addToDefinition: JSON.stringify(fieldsToAdd),
+                            f: 'json'
+                        },
+                        method: 'post'
+                    }).then(lang.hitch(this, function (res) {
+                        console.log(res);
+                        document.getElementById('addfielddiv').style.display = 'none';
+                        this.fieldAddedFlag = true;
+                        document.getElementById("removeVectorBtn").click();
+                        this.sceneView.map.remove(this.sceneView.map.findLayerById(this.addFieldVectorLayer.id));
+                        var featureLayer = new FeatureLayer({
+                            url: this.addFieldVectorLayer.url,
+                            id: this.addFieldVectorLayer.id,
+                            title: this.addFieldVectorLayer.title
+                        });
+                        this.sceneView.map.add(featureLayer);
+                        //this.orientedViewer.addVectorLayer(this.addFieldVectorLayer.title, this.addFieldVectorLayer.url, this.addFieldVectorLayer.renderer.toJSON(), this.addFieldVectorLayer.editable).then(lang.hitch(this, function(res) {
+                        //}));
+
+                        document.getElementById('addVectorBtn').click();
+                    })).catch(function (err) {
+                        this.errorNotification("Cannot add fields");
+                        document.getElementById('addfielddiv').style.display = 'none';
+                    });
+                } else {
+                    this.errorNotification("Please log in to add fields.");
+                    document.getElementById('addfielddiv').style.display = 'none';
+                }
+            }));
+
+            this.featureClass.addEventListener('change', lang.hitch(this, function () {
+                document.getElementById('addfielddiv').style.display = 'none';
+            }));
+
+            this.noAddFieldBtn.addEventListener('click', lang.hitch(this, function () {
+                document.getElementById('addfielddiv').style.display = 'none';
+            }));
                     this.addVectorBtn.addEventListener("click", lang.hitch(this, function () {
                         var vectorLayerProp = this.vectorLayers[this.featureClass.value];
                         var addLayer = true;
@@ -186,7 +255,40 @@ define([
                                 break;
                             }
                         }
-                        if (addLayer) {
+						
+						if (!this.fieldAddedFlag) {
+                    var imgurnfield = 0;
+                    var imggeomfield = 0;
+                    for (var i in vectorLayerProp.fields) {
+                        if (vectorLayerProp.fields[i].name.toLowerCase() === "ImgUrn".toLowerCase()) {
+                            imgurnfield++;
+                        }
+                        if (vectorLayerProp.fields[i].name.toLowerCase() === "ImgGeom".toLowerCase()) {
+                            imggeomfield++;
+                        }
+                    }
+                    document.getElementById('missingfieldholder').innerHTML = '';
+                    if (imgurnfield === 0 || imggeomfield === 0) {
+                        this.listofFieldstoAdd = [];
+                        document.getElementById('addfielddiv').style.display = 'block';
+                        var node = document.createElement('ul');
+                        if (imgurnfield === 0) {
+                            this.listofFieldstoAdd.push("ImgUrn");
+                            var node1 = document.createElement('li');
+                            node1.innerHTML = 'ImgUrn';
+                            node.appendChild(node1);
+                        }
+                        if (imggeomfield === 0) {
+                            this.listofFieldstoAdd.push("ImgGeom");
+                            var node1 = document.createElement('li');
+                            node1.innerHTML = 'ImgGeom';
+                            node.appendChild(node1);
+                        }
+                        document.getElementById('missingfieldholder').appendChild(node);
+                        this.addFieldVectorLayer = vectorLayerProp;
+                    }
+                }
+                        if (addLayer) {   
                             var renderer = vectorLayerProp.renderer.toJSON();
                             switch (vectorLayerProp.geometryType) {
                                 case 'polygon':
@@ -273,6 +375,12 @@ define([
                             this.vectorLayerAdded.push(vectorLayerProp.url);
                         }
                     }));
+					IdentityManager.on('credential-create', lang.hitch(this, function (user) {
+                this.preserveToken = {};
+                this.preserveToken.token = user.credential.token;
+                this.preserveToken.server = user.credential.server;
+
+            }));
                     this.removeVectorBtn.addEventListener("click", lang.hitch(this, function () {
                         this.orientedViewer.removeVectorLayer(this.vectorLayers[this.featureClass.value].title);
                         for (var zv = this.vectorLayerAdded.length - 1; zv >= 0; zv--) {
@@ -296,6 +404,8 @@ define([
                             this.orientedViewer.resizeImageOnMap({width: this.sceneView.width, height: this.sceneView.height, camera: this.sceneView.camera.clone()});
                         }
                     }));
+					this.selectLocationFlag = true;
+            this.sceneView.cursor = "crosshair";
                 },
                 loadOrientedImageryApi: function () {
                     orientedImagery.on("load", lang.hitch(this, function (loaded) {
@@ -579,6 +689,10 @@ define([
                         this.imageProperties = response.imageAttributes;
                         this.setCameraView(this.imageProperties);
                         this.activeImageID = response.imageAttributes.imageID;
+						this.imagePoints.set('disabled', false);
+            this.currentCoverage.set('disabled', false);
+            this.currentCoverage.set('checked', true);
+            this.similarCoverage.set('disabled', false);
                     }
                 },
                 drawImageSourcePoints: function (points, imageID) {
@@ -702,6 +816,7 @@ define([
                         domStyle.set(this.agolContentSelect, "display", "none");
                         domStyle.set(this.fileInput, "display", "none");
                         domStyle.set(this.urlInput, "display", "table");
+						domStyle.set(this.sampleInput, "display", "none");
                         if (this.inputOICUrl.value)
                             this.addOICBtn.disabled = false;
                     } else if (value === "file") {
@@ -709,18 +824,128 @@ define([
                         domStyle.set(this.agolContentSelect, "display", "none");
                         domStyle.set(this.urlInput, "display", "none");
                         domStyle.set(this.fileInput, "display", "block");
+						domStyle.set(this.sampleInput, "display", "none");
                         if (this.oicFile.value)
                             this.addOICBtn.disabled = false;
-                    } else {
+                    } else if (value === "agol"){
                         domStyle.set(this.urlInput, "display", "none");
                         domStyle.set(this.fileInput, "display", "none");
                         domStyle.set(this.agolInput, "display", "block");
+						domStyle.set(this.sampleInput, "display", "none");
                         domStyle.set(this.agolContentSelect, "display", "inline-block");
                         if (this.agolOICList.value)
                             this.addOICBtn.disabled = false;
                         this.getOICFromAgol();
-                    }
+                    } else {
+						domStyle.set(this.urlInput, "display", "none");
+                        domStyle.set(this.fileInput, "display", "none");
+                        domStyle.set(this.agolInput, "display", "none");
+						domStyle.set(this.sampleInput, "display", "block");
+                        domStyle.set(this.agolContentSelect, "display", "none");
+                                if (this.sampleOICList.value) {
+                    this.addOICBtn.disabled = false;
+                }
+                this.getSampleOIC("5a0a7396d2ce4e739536b0f55a22d814");
+					}
                 },
+				getSampleOIC: function (id) {
+            this.removeSelectOptions(this.sampleOICList);
+            this.addSelectOption(this.sampleOICList, "Select", "");
+            esriRequest("https://www.arcgis.com/sharing/rest/content/groups/" + id, {
+                query: {
+                    f: "json"
+                },
+                responseType: "json"
+            }).then(lang.hitch(this, function (response) {
+                response = response.data;
+                if (response.items) {
+                    var count = response.items.length;
+                    if (count) {
+                        var oicCount = 0;
+                        for (var oicitem = 0; oicitem < count; oicitem++) {
+                            if (response.items[oicitem].type === "Oriented Imagery Catalog") {
+                                oicCount++;
+									  
+                            }
+                        }
+                        if (oicCount > 1) {
+                            this.addSelectOption(this.sampleOICList, "Add all", "add all");
+														   
+																																												
+																	
+								 
+								
+                        }
+                        response.items.forEach(lang.hitch(this, function (item) {
+                            if (item.type === "Oriented Imagery Catalog") {
+                                esriRequest("https://www.arcgis.com/sharing/rest/content/items/" + item.id + "/data", {
+                                    query: {
+                                        f: "json"
+																		
+																				
+																		
+																		
+												   
+															
+												  
+																		
+																				
+																	   
+																		 
+											   
+															
+							
+																	   
+																		
+																		 
+																						
+												   
+															
+											  
+					 
+                                    },
+                                    responseType: "json"
+									   
+																			
+												  
+                                }).then(lang.hitch(this, function (data) {
+                                    data = data.data;
+																											
+													
+															 
+											  
+											 
+												 
+							  
+														  
+										
+											 
+								  
+													
+
+
+                                    this.addSelectOption(this.sampleOICList, data.properties.Name, "https://www.arcgis.com/sharing/rest/content/items/" + item.id);
+
+
+                                }));
+																	
+																	
+																	
+								
+                            } else {
+                                count--;
+                                if (count === 0)
+                                    this.hideLoading();
+                            }
+                        }));
+                    } else
+                        this.hideLoading();
+                } else
+                    this.hideLoading();
+            })).catch(lang.hitch(this, function () {
+                this.hideLoading();
+            }));
+        },
                 getOICFromAgol: function () {
                     this.showLoading();
                     var portal = new arcgisPortal("https://www.arcgis.com");
@@ -732,6 +957,7 @@ define([
                                 userId: portal.user.username,
                                 myFolders: {},
                                 myGroups: {},
+								myOrgGroups: {},
                                 user: portal.user
                             };
                             esriRequest(portal.user.url, {
@@ -745,8 +971,10 @@ define([
                                 for (var b = 0; b < userGroups.groups.length; b++) {
                                     this.userContentInfo.myGroups[userGroups.groups[b].title] = {id: userGroups.groups[b].id, items: []};
                                 }
+								this.getOrganisationGroups(portal.user);
                                 this.getOICFromFolders(portal.user);
                             })).catch(lang.hitch(this, function () {
+								this.getOrganisationGroups(portal.user);
                                 this.getOICFromFolders(portal.user);
                             }));
                         } else {
@@ -758,6 +986,25 @@ define([
                         this.hideLoading();
                     }));
                 },
+				getOrganisationGroups: function (user) {
+            esriRequest(user.portal.restUrl + '/community/groups', {
+                query: {
+                    f: "json",
+                    q: "orgid:" + user.orgId,
+                    start: 1,
+                    num: 50,
+                    sortField: 'title',
+                    sortOrder: 'asc'
+
+                },
+                responseType: "json"
+            }).then(lang.hitch(this, function(result) {
+                var orgGroups = result.data;
+                for (var b = 0; b < orgGroups.results.length; b++) {
+                    this.userContentInfo.myOrgGroups[orgGroups.results[b].title] = { id: orgGroups.results[b].id, items: [] };
+                }
+            }))
+        },
                 getOICFromFolders: function (loggedInUser) {
                     esriRequest(loggedInUser.userContentUrl, {
                         query: {
@@ -785,10 +1032,14 @@ define([
                     }));
                 },
                 populateFolderGroupList: function (value) {
-                    if (value === "content")
+                    if (value === "content") {
                         var items = Object.keys(this.userContentInfo.myFolders);
-                    else
+                    } else if (value === 'group') {												
                         var items = Object.keys(this.userContentInfo.myGroups);
+					} else if (value === 'orgGroups') {
+						var items = Object.keys(this.userContentInfo.myOrgGroups);
+					}
+						
                     items.sort(function (a, b) {
                         a = a.toLowerCase().split(" ")[0];
                         b = b.toLowerCase().split(" ")[0];
@@ -816,8 +1067,10 @@ define([
                     if (value) {
                         if (this.agolContentSelect.value === "content")
                             var items = this.userContentInfo.myFolders[value].items;
-                        else
+                        else if (this.agolContentSelect.value === "group")
                             var items = this.userContentInfo.myGroups[value].items;
+						else if (this.agolContentSelect.value === "orgGroups") 
+							var items = this.userContentInfo.myOrgGroups[value].items;
                         if (items.length) {
                             items.sort(function (a, b) {
                                 a = a.name.toLowerCase().split(" ")[0];
@@ -844,7 +1097,7 @@ define([
                     }
                 },
                 getOICFromGroup: function (value) {
-                    var id = this.userContentInfo.myGroups[value].id;
+                    var id = this.userContentInfo.myGroups[value] ? this.userContentInfo.myGroups[value].id : this.userContentInfo.myOrgGroups[value].id;;
                     esriRequest("https://www.arcgis.com/sharing/rest/content/groups/" + id, {
                         query: {
                             f: "json"
@@ -853,12 +1106,28 @@ define([
                     }).then(lang.hitch(this, function (response) {
                         response = response.data;
                         if (response.items) {
+							if (this.userContentInfo.myGroups[value]) {
+                        this.userContentInfo.myGroups[value].items = [];
+                    } else if (this.userContentInfo.myOrgGroups[value]) {
+                        this.userContentInfo.myOrgGroups[value].items = [];
+                    }
                             for (var a = 0; a < response.items.length; a++) {
                                 if (response.items[a].type === "Oriented Imagery Catalog") {
-                                    this.userContentInfo.myGroups[value].items.push({name: response.items[a].title, url: "https://www.arcgis.com/sharing/rest/content/items/" + response.items[a].id});
+                                    if (this.userContentInfo.myGroups[value]) { //groupchange
+                                this.userContentInfo.myGroups[value].items.push({ name: response.items[a].title, url: "https://www.arcgis.com/sharing/rest/content/items/" + response.items[a].id });
+                            } else {
+                                this.userContentInfo.myOrgGroups[value].items.push({ name: response.items[a].title, url: "https://www.arcgis.com/sharing/rest/content/items/" + response.items[a].id });
+                              
+											 
+								 
+										 
+							   
+												  
+																									
+                            }
                                 }
                             }
-                            var items = this.userContentInfo.myGroups[value].items;
+                            var items = this.userContentInfo.myGroups[value] ? this.userContentInfo.myGroups[value].items : this.userContentInfo.myOrgGroups[value].items;
                             items.sort(function (a, b) {
                                 a = a.name.toLowerCase().split(" ")[0];
                                 b = b.name.toLowerCase().split(" ")[0];
@@ -892,6 +1161,7 @@ define([
                     }).then(lang.hitch(this, function (response) {
                         response = response.data;
                         if (response.items) {
+							this.userContentInfo.myFolders[value].items = [];
                             for (var a = 0; a < response.items.length; a++) {
                                 if (response.items[a].type === "Oriented Imagery Catalog") {
                                     this.userContentInfo.myFolders[value].items.push({name: response.items[a].title, url: "https://www.arcgis.com/sharing/rest/content/items/" + response.items[a].id});
@@ -992,7 +1262,7 @@ define([
                         this.addOICItemUrl();
                     else if (input === "file")
                         this.addOICFile();
-                    else {
+                    else if (input === 'agol') {
                         if (this.agolOICList.value === "add all") {
                             var oicList = this.agolOICList.options;
                             for (var a = 0; a < oicList.length; a++) {
@@ -1002,7 +1272,19 @@ define([
                         } else
                             this.addOICItem(this.agolOICList.value, true);
                     }
-                },
+					else {
+                if (this.sampleOICList.value === "add all") {
+                    var oicList = this.sampleOICList.options;
+                    for (var a = 0; a < oicList.length; a++) {
+                        if (oicList[a].value && oicList[a].value !== "add all")
+                            this.addOICItem(oicList[a].value, false);
+                    }
+                } else {
+                    this.addOICItem(this.sampleOICList.value, true);
+                }
+          
+                }
+				},
                 addOICItem: function (url, autoSelect) {
                     esriRequest(url + "/data", {
                         query: {
@@ -1392,7 +1674,8 @@ define([
                                 url: layers[a].url + "/" + layers[a].layerId,
                                 editable: layers[a].editingEnabled || layers[a].capabilities.operations.supportsEditing,
                                 renderer: layers[a].renderer,
-                                geometryType: layers[a].geometryType
+                                geometryType: layers[a].geometryType,
+								fields: layers[a].fields
                             };
                         }
                     }
