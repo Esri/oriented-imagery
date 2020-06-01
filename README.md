@@ -15,6 +15,14 @@ To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro 
 
 ## What's new in Oriented Imagery developer resources
 
+### Version 2.3 (release May 2020)
+
+* Web AppBuilder widgets using the ArcGIS API for JavaScript 4.x have been released. The 3.x versions are moved to mature support.
+* The Oriented Imagery API now supports attaching bubble and panoramic imagery to a feature service.
+* The sample web apps have two enhancements:
+	- App users can now add OICs from My Organization's Groups in ArcGIS Online. 
+	- The Image Exposure points layer is grayed out if no exposure points are found.
+
 ### Version 2.2 (release March 2020)
 
 * When digitizing in the web app, the user will now be prompted to add ImgUrn and ImgGeom fields to the feature service if they're not already there.
