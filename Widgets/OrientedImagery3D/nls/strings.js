@@ -46,7 +46,10 @@ define({
 	 samples: "Samples",
      orgGroups: "My Org Groups",
      enterprise: "ArcGIS Enterprise",
-     enterpriseUrl: "Enterprise portal url"
+     enterpriseUrl: "Enterprise portal url",
+	 addFieldMsg: "Cannot add fields",
+	 loginMsg: "Please log in to add fields."
+	 
     }
      
 });

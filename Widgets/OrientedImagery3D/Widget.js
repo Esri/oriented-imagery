@@ -241,11 +241,11 @@ define([
 
                             document.getElementById('addVectorBtn').click();
                         })).catch(function (err) {
-                            this.errorNotification("Cannot add fields");
+                            this.errorNotification(this.nls.addFieldMsg);
                             document.getElementById('addfielddiv').style.display = 'none';
                         });
                     } else {
-                        this.errorNotification("Please log in to add fields.");
+                        this.errorNotification(this.nls.loginMsg);
                         document.getElementById('addfielddiv').style.display = 'none';
                     }
                 }));
