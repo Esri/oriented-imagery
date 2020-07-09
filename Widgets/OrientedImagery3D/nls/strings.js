@@ -3,7 +3,7 @@ define({
      addOIC: "Add Oriented Imagery Catalog",
      selectPointOn: "Turn on to pick a focus point in scene to view image",
      selectPointOff: "Turn off to select features in scene",
-     viewMode: "Choose view mode",
+     viewMode: "Image viewer mode",
      twoD: "2D",
      threeD: "3D",
      exposurePoints: "Image exposure points",
@@ -44,7 +44,9 @@ define({
 	 addField: "Add fields?",
 	 cancel: "Cancel",
 	 samples: "Samples",
-	 orgGroups: "My Org Groups"
+     orgGroups: "My Org Groups",
+     enterprise: "ArcGIS Enterprise",
+     enterpriseUrl: "Enterprise portal url"
     }
      
 });
