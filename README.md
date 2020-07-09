@@ -2,7 +2,7 @@
 
 This repo contains developer resources for Oriented Imagery, including 2D and 3D Web AppBuilder widgets, a description of the Oriented Imagery API, and a schema for oriented imagery catalogs (OICs). Learn more about [Oriented Imagery](https://doc.arcgis.com/en/imagery/workflows/resources/managing-and-visualizing-oriented-imagery.htm) on the Imagery Workflows site.
 
-Use the Oriented Imagery widgets for Web AppBuilder for ArcGIS to build web apps to explore oriented imagery (imagery not pointing straight down at the ground) from aerial, drone, or terrestrial sensors. App users select an oriented imagery catalog, click a location of interest on the map, then explore any available oblique, street-view, or inspection images that depict the area of interest using the inset viewer. As you pan and zoom in the oriented image, see the camera’s field of view dynamically updated on the map. Check out examples of a [2D app](https://oi.geocloud.com/app/index.html) and a [3D app](https://oi.geocloud.com/app3D/index.html) built with the widgets.
+Use the Oriented Imagery widgets for Web AppBuilder for ArcGIS to build web apps to explore oriented imagery (imagery not pointing straight down at the ground) from aerial, drone, or terrestrial sensors. App users select an oriented imagery catalog, click a location of interest on the map, then explore any available oblique, street-view, or inspection images that depict the area of interest using the inset viewer. As you pan and zoom in the oriented image, see the camera’s field of view dynamically updated on the map. Check out examples of a [2D app](https://oi1.img.arcgis.com/app/index.html) and a [3D app](https://oi1.img.arcgis.com/app3D/index.html) built with the widgets.
 
 Also in this repo, find a description of the [Oriented Imagery API](OrientedImagery_API.pdf), which can be used to build custom oriented imagery applications. 
 
@@ -14,6 +14,17 @@ To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro 
 
 
 ## What's new in Oriented Imagery developer resources
+
+### Version 2.4 (release July 2020)
+
+* Web AppBuilder widgets using the ArcGIS API for JavaScript 4.x have been released. The 3.x versions are moved to mature support.
+* The Oriented Imagery API now supports: 
+    - Two different navigation tools: Basic and Advance.
+	- You can now set the distance of features during editing for increased accuracy.
+	- Point features now support labeling mode, where you can draw rectangles around objects on the image for point feature layers. 
+* The sample web apps and 3D widget have the following enhancements:
+	- Users can now add OICs from their ArcGIS Enterprise Portal account.
+	- OAuth support for logging in.
 
 ### Version 2.3 (release May 2020)
 
@@ -69,7 +80,7 @@ To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro 
 ### Resources
 
 * [Web App Builder for ArcGIS (Developer Edition)](https://developers.arcgis.com/web-appbuilder/)
-* Examples of a [2D app](https://oi.geocloud.com/app/index.html) and a [3D app](https://oi.geocloud.com/app3D/index.html) built with Oriented Imagery widgets
+* Examples of a [2D app](https://oi1.img.arcgis.com/app/index.html) and a [3D app](https://oi1.img.arcgis.com/app3D/index.html) built with Oriented Imagery widgets
 
 ## Issues
 

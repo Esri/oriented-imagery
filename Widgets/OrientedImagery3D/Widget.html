@@ -47,7 +47,7 @@
         <div data-dojo-attach-point="notifyUser" style="display: block;color: red;"></div>
     </div>
     <div data-dojo-type="dijit/Dialog" data-dojo-attach-point="imageDialog" title="${nls.dialogTitle1}" class="oi-widget-dialog" data-dojo-props="focus:function(){}">
-        <div data-dojo-attach-point="oiviewer" style="width: 500px;height: 400px;"></div>
+        <div id="oiviewer" data-dojo-attach-point="oiviewer" style="width: 500px;height: 400px;"></div>
     </div>
 
 
@@ -56,6 +56,7 @@
             <label style="display: inline-block;min-width: 5.1rem;">${nls.from}: </label>
             <select data-dojo-attach-point="oicInputType" style="display: inline-block;">
                 <option value="agol">${nls.agol}</option>
+                <option value="enterprise">${nls.enterprise}</option>
                 <option value="file">${nls.file}</option>
                 <option value="url">${nls.itemUrl}</option>
 				<option value="sample">${nls.samples}</option>									   
@@ -68,6 +69,21 @@
         </div>
         <div data-dojo-attach-point="agolInput" style="display:none;">
             <div data-dojo-attach-point="itemNotify" style="display: block;color: red;"></div>
+            
+            <div id='portal-login' style='display:none'>
+                ${nls.enterpriseUrl}: 
+                <!-- <span title='Only Portal versions 10.8.1 and above are supported' id="portal-info"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" class="svg-icon svg-icon-blue"><path d="M31.297 16.047c0 8.428-6.826 15.25-15.25 15.25S.797 24.475.797 16.047c0-8.424 6.826-15.25 15.25-15.25s15.25 6.826 15.25 15.25zM18 24V12h-4v12h-2v2h8v-2h-2zm0-18h-4v4h4V6z"/></svg></span> -->
+                <input type='text' id='portal-url' /><br />
+                <span id='portal-error' style='display:none;color:red;'><br /></span>
+                <!-- //client id changes -->
+                <div style="display:none">
+                <input type='hidden' id='portal-client' /><br /></div>
+                <!-- //client id changes -->
+                <button disabled id="portal-login-button" class="btn btn-clear oi-widget-centerBtn">Login</button>
+               
+            </div>
+            
+            <div id='agol-portal-div'>
             <div style="display: block;">
                 <label data-dojo-attach-point="folderGroupLabel" style="display: inline-block;min-width: 5.1rem;">${nls.group}: </label>
                 <select style="display: inline-block;width: 16.35rem;max-width: 16.35rem !important;" data-dojo-attach-point="agolFolderList"></select>
@@ -76,6 +92,7 @@
                 <label style="display: inline-block;min-width: 5.1rem;">${nls.oic}: </label>
                 <select style="display: inline-block;width: 16.35rem;max-width: 16.35rem !important;" data-dojo-attach-point="agolOICList"></select>
             </div>
+        </div>
         </div>
         <div data-dojo-attach-point="urlInput" style="display:none;padding-bottom: 0.8em;"><label style='display: table-cell;min-width: 5.3rem;'>${nls.itemUrl}: </label><input type="text" data-dojo-attach-point="inputOICUrl"  style='display: table-cell;'/></div>
         <div data-dojo-attach-point="fileInput" style="display: none;padding-bottom: 0.8em;"><input data-dojo-attach-point="oicFile" type="file" name="oicFile" accept=".oic" style='border: 0px solid transparent; box-shadow: none;'/></div>
