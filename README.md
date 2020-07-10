@@ -19,11 +19,11 @@ To view OICs in ArcGIS Pro, download the Oriented Imagery add-in for ArcGIS Pro 
 
 * Web AppBuilder widgets using the ArcGIS API for JavaScript 4.x have been released. The 3.x versions are moved to mature support.
 * The Oriented Imagery API now supports: 
-    - Two different navigation tools: Basic and Advance.
+    - Two different navigation tools: Basic and Advanced.
 	- You can now set the distance of features during editing for increased accuracy.
 	- Point features now support labeling mode, where you can draw rectangles around objects on the image for point feature layers. 
 * The sample web apps and 3D widget have the following enhancements:
-	- Users can now add OICs from their ArcGIS Enterprise Portal account.
+	- Users can now add OICs from their ArcGIS Enterprise Portal accounts.
 	- OAuth support for logging in.
 
 ### Version 2.3 (release May 2020)
