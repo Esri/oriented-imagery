@@ -1,0 +1,21 @@
+{
+	"Parameters": {
+		"Metadata File": "",
+		"Video File": "",
+		"Frames Step (In Seconds)": "2"
+	},
+	"DefaultAttributes": {
+		"Defaults": {
+			"CamHeading": "",
+			"CamPitch": "90",
+			"CamRoll": "0",
+			"HFOV": "",
+			"VFOV": "",
+			"AvgHtAG": "",
+			"FarDist": "",
+			"NearDist": "",
+			"OIType": "V",
+			"MaxDist": "300"
+		}	
+	}
+}
