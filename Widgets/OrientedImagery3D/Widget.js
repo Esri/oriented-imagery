@@ -34,7 +34,8 @@ define([
     "dijit/form/Select",
     "dijit/form/Button",
     "dijit/form/CheckBox",
-    "dijit/form/TextBox"
+    "dijit/form/TextBox",
+    "dijit/Dialog"
 
 ],
     function (
