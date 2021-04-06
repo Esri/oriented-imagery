@@ -15,6 +15,22 @@ To view OICs in ArcGIS Pro, download the [Oriented Imagery add-in for ArcGIS Pro
 
 ## What's new in Oriented Imagery developer resources
 
+### Version 2.6 (release April 2021)
+
+* What’s new in Oriented Imagery API:
+   - Added Time selector to filter images based on days, weeks, months, and years.
+   - Added support for 360 video
+   - Added superimpose view to superimpose imagery into maps on top of 3D Data layers and vector layers
+   - Added image attributes tool to display attributes for the current image
+   - Added support to adjust the size of navigation tool
+   - Updated best image computation based on imagery type
+   - Updated UI/UX of the viewer
+   - Several general fixes and performance and stability improvements.
+* What’s new in Oriented Imagery 3D widget for Web AppBuilder For ArcGIS:
+   - Updated UI/UX of the widget
+   - Updated Oriented Imagery API to v2.6
+   - Several general fixes and performance and stability improvements.
+
 ### Version 2.4 (release July 2020)
 
 * Web AppBuilder widgets using the ArcGIS API for JavaScript 4.x have been released. The 3.x versions are moved to mature support.
