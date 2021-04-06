@@ -1,108 +1,14 @@
-<div>
-    <select style='display: inline-block;' data-dojo-attach-point="selectOIC">
-    </select>
-    <button title="${nls.addOIC}" style='display: none;' data-dojo-attach-point='addBtn' class='btn btn-clear'><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" class="svg-icon"><path d="M30 18H18v12h-4V18H2v-4h12V2h4v12h12v4z"/></svg></button>
-    <button title="${nls.selectPointOn}" class='btn btn-clear btn-grouped oi-widget-selectBtn' style="display: inline-block;" data-dojo-attach-point='selectPointBtn'><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" class="svg-icon"><path d="M15.999 0C11.214 0 8 1.805 8 6.5v17l7.999 8.5L24 23.5v-17C24 1.805 20.786 0 15.999 0zM16 14.402A4.4 4.4 0 0 1 11.601 10a4.4 4.4 0 1 1 8.798 0A4.4 4.4 0 0 1 16 14.402z"/></svg></button>
-    <div style="border-top: 1px solid #e7e7e7;margin-top: 1em;padding-top: 0.5em;">
-        <fieldset class="radio-group">
-            <legend class="radio-group-title">${nls.viewMode}</legend>
-            <input class="radio-group-input" type="radio" data-dojo-attach-point="2DView" id="oi-2DView" name="framework" checked/>
-            <label class="radio-group-label" for="oi-2DView" style="width:50%;">${nls.twoD}</label>
-            <input class="radio-group-input" type="radio" data-dojo-attach-point="3DView" id="oi-3DView" name="framework"/>
-            <label class="radio-group-label" for="oi-3DView" style="width:50%;">${nls.threeD}</label>
-        </fieldset>
-    </div>
-    <div class="oi-widget-checkBox" style="margin-top:15px;">
-        <input data-dojo-type="dijit/form/CheckBox" data-dojo-attach-point="imagePoints" disabled /><svg class="oi-widget-svg" width="10" height="10"><circle cx="5" cy="5" r="5" style="fill: rgba(0,128,192,1);stroke-width:0;stroke:rgba(0,0,0,0)" /></svg><span class="oi-widget-label oi-widget-marginLeft">${nls.exposurePoints}</span>
-    </div>
-    <div class="oi-widget-checkBox">
-        <input data-dojo-type="dijit/form/CheckBox" data-dojo-attach-point="currentCoverage" disabled /><svg class="oi-widget-svg" width="15" height="10"><polygon points="0,0 2.5,10 12.5,10 15,0" style="fill:rgba(255,102,102,0.5);stroke-width:0;stroke:rgb(0,0,0)" /></svg><span class="oi-widget-label oi-widget-marginLeft">${nls.currentCoverage}</span>
-    </div>
-    <div class="oi-widget-checkBox">
-        <input data-dojo-type="dijit/form/CheckBox" data-dojo-attach-point="similarCoverage" disabled /><svg class="oi-widget-svg" width="15" height="10"><polygon points="0,0 2.5,10 12.5,10 15,0" style="fill:rgba(0,128,192,0.5);stroke-width:0;stroke:rgb(0,0,0)" /></svg><span class="oi-widget-label oi-widget-marginLeft">${nls.similarCoverage}</span>
-    </div>
-    <div class="oi-widget-checkBox">
-        <input data-dojo-type="dijit/form/CheckBox" data-dojo-attach-point="allCoverage" /><svg class="oi-widget-svg" width="15" height="10"><polygon points="0,0 2.5,10 12.5,10 15,0" style="fill:rgba(0,200,0,0.5);stroke-width:0;stroke:rgb(0,0,0)" /></svg><span class="oi-widget-label oi-widget-marginLeft">${nls.coverageMap}</span>
-    </div>
-    <div data-dojo-attach-point="2DModePane">
-        <div data-dojo-attach-point="addVectorContainer" style="display: none;margin-top: 0.5em;border-top: 1px solid #e7e7e7;">
-            <span class="oi-widget-label" style="display: block;margin: 5px 0;">${nls.vectorLayer}: </span>
-            <select data-dojo-attach-point="featureClass" style="display: inline-block;max-width: 190px !important;">
-            </select>
-            <button  title="${nls.addVector}" class="btn btn-clear" style="display: inline-block;" data-dojo-attach-point='addVectorBtn'>${nls.add}</button>
-            <button  title="${nls.removeVector}" class="btn btn-clear" style="display: inline-block;" data-dojo-attach-point='removeVectorBtn'>${nls.remove}</button>           
-			<div id="addfielddiv" style="display:none;font-size:smaller;color:#0079c1;">
-				<br />
-				${nls.fieldAddMsg} - <br />
-				<div id="missingfieldholder"></div>
-				<button class='btn btn-clear' data-dojo-attach-point='addFieldBtn'>${nls.addField}</button> 
-				<button class='btn btn-clear btn-red' data-dojo-attach-point='noAddFieldBtn'>${nls.cancel}</button>
-			</div>
-			<button class='btn btn-transparent'  style="display:none;margin-top: 5px;"  data-dojo-attach-point='viewGraphicBtn'>${nls.viewGraphic}</button>																								
-        </div>																																												 	  
-    </div>
+<div data-dojo-attach-point="oiwidget" style="width:100%;height:100%;">
 
-    <div data-dojo-attach-point="3DModePane" style="display: none;">
-        <button class='btn btn-transparent oi-widget-hide'  data-dojo-attach-point='hideImageBtn'>${nls.removeImage}</button>
-        <div data-dojo-attach-point="notifyUser" style="display: block;color: red;"></div>
-    </div>
-    <div data-dojo-type="dijit/Dialog" data-dojo-attach-point="imageDialog" title="${nls.dialogTitle1}" class="oi-widget-dialog" data-dojo-props="focus:function(){}">
-        <div id="oiviewer" data-dojo-attach-point="oiviewer" style="width: 500px;height: 400px;"></div>
-    </div>
+    <div data-dojo-attach-point="oiviewer" style="min-height: 56px;width:100%;height:100%;"></div>
+    <!--//676 issue fix-->
+    <div>
+        <div id="errorDeclare" style="display: none;color: red;padding-bottom: 0.8em;"></div>
 
+        <div data-dojo-attach-point="2DModePane">
+            <button class='oi-btn-css oi-btn-css-transparent' style="display:none;margin-top: 5px;"
+                data-dojo-attach-point='viewGraphicBtn'>Click here to view the selected feature in image.</button>
+        </div>
 
-    <div data-dojo-type='dijit/Dialog' data-dojo-attach-point='addOICDialog' title="${nls.addOIC}" class='oi-widget-dialog'>
-        <div style="display: block;">
-            <label style="display: inline-block;min-width: 5.1rem;">${nls.from}: </label>
-            <select data-dojo-attach-point="oicInputType" style="display: inline-block;">
-                <option value="agol">${nls.agol}</option>
-                <option value="enterprise">${nls.enterprise}</option>
-                <option value="file">${nls.file}</option>
-                <option value="url">${nls.itemUrl}</option>
-				<option value="sample">${nls.samples}</option>									   
-            </select>
-            <select style="display: inline-block;" data-dojo-attach-point="agolContentSelect">
-                <option value="content">${nls.content}</option>
-                <option value="group" selected="selected">${nls.groups}</option>
-				<option value='orgGroups'>${nls.orgGroups}</option>													
-            </select>
-        </div>
-        <div data-dojo-attach-point="agolInput" style="display:none;">
-            <div data-dojo-attach-point="itemNotify" style="display: block;color: red;"></div>
-            
-            <div id='portal-login' style='display:none'>
-                ${nls.enterpriseUrl}: 
-                <!-- <span title='Only Portal versions 10.8.1 and above are supported' id="portal-info"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" class="svg-icon svg-icon-blue"><path d="M31.297 16.047c0 8.428-6.826 15.25-15.25 15.25S.797 24.475.797 16.047c0-8.424 6.826-15.25 15.25-15.25s15.25 6.826 15.25 15.25zM18 24V12h-4v12h-2v2h8v-2h-2zm0-18h-4v4h4V6z"/></svg></span> -->
-                <input type='text' id='portal-url' /><br />
-                <span id='portal-error' style='display:none;color:red;'><br /></span>
-                <!-- //client id changes -->
-                <div style="display:none">
-                <input type='hidden' id='portal-client' /><br /></div>
-                <!-- //client id changes -->
-                <button disabled id="portal-login-button" class="btn btn-clear oi-widget-centerBtn">Login</button>
-               
-            </div>
-            
-            <div id='agol-portal-div'>
-            <div style="display: block;">
-                <label data-dojo-attach-point="folderGroupLabel" style="display: inline-block;min-width: 5.1rem;">${nls.group}: </label>
-                <select style="display: inline-block;width: 16.35rem;max-width: 16.35rem !important;" data-dojo-attach-point="agolFolderList"></select>
-            </div>
-            <div style="display: block;">
-                <label style="display: inline-block;min-width: 5.1rem;">${nls.oic}: </label>
-                <select style="display: inline-block;width: 16.35rem;max-width: 16.35rem !important;" data-dojo-attach-point="agolOICList"></select>
-            </div>
-        </div>
-        </div>
-        <div data-dojo-attach-point="urlInput" style="display:none;padding-bottom: 0.8em;"><label style='display: table-cell;min-width: 5.3rem;'>${nls.itemUrl}: </label><input type="text" data-dojo-attach-point="inputOICUrl"  style='display: table-cell;'/></div>
-        <div data-dojo-attach-point="fileInput" style="display: none;padding-bottom: 0.8em;"><input data-dojo-attach-point="oicFile" type="file" name="oicFile" accept=".oic" style='border: 0px solid transparent; box-shadow: none;'/></div>
-		<div data-dojo-attach-point="sampleInput" style="display:none;">
-            <div style="display:block;">
-                <label style="display: inline-block;min-width: 5.1rem;" class='oi-widget-css-label'>${nls.oic}: </label>
-                <select style="display: inline-block;width: 16.35rem;max-width: 16.35rem !important;" data-dojo-attach-point="sampleOICList"></select>
-            </div>
-        </div>											
-        <div data-dojo-attach-point="errorNotify" style="display: none;color: red;padding-bottom: 0.8em;"></div>
-        <button data-dojo-attach-point="addOICBtn" disabled class="btn btn-clear oi-widget-centerBtn">${nls.add}</button>
     </div>
 </div>
