@@ -213,3 +213,8 @@
 select {
     max-width: 200px !important;
 }
+
+#oic-click-btn {
+    bottom: 10vh;
+    left: 1vw;
+}

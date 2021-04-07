@@ -59,15 +59,16 @@ define([
                 createDataGrid: function () {
                     var newList = declare([List, Selection, Keyboard]);
                     this.list = new newList({}, this.dataGrid);
-                    this.list.on('dgrid-select', lang.hitch(this, function (event) {
-                        this.deleteBtn.set("disabled", false);
-                    }));
-                    this.list.on('dgrid-deselect', lang.hitch(this, function (event) {
-                        if (!this.list.selection) {
-                            this.deleteBtn.set("disabled", true);
-                        }
-                    }));
+                    // this.list.on('dgrid-select', lang.hitch(this, function (event) {
+                    //     this.deleteBtn.set("disabled", false);
+                    // }));
+                    // this.list.on('dgrid-deselect', lang.hitch(this, function (event) {
+                    //     if (!this.list.selection) {
+                    //         this.deleteBtn.set("disabled", true);
+                    //     }
+                    // }));
                     this.arrayList = [];
+                    this.list.refresh();
                     this.list.renderArray(this.arrayList);
 
                 },
@@ -108,13 +109,15 @@ define([
                         });
                         request.then(lang.hitch(this, function (oicInfo) {
                             if (oicInfo && oicInfo.properties) {
-                                this.arrayList.push({
+                                this.arrayList[0] = {
                                     title: oicInfo.properties.Name,
                                     serviceUrl: oicInfo.properties.ServiceURL,
                                     overviewUrl: oicInfo.properties.OverviewURL,
                                     itemUrl: this.portalUrl + "home/item.html?id=" + url.split("items/")[1]
-                                });
+                                };
+                                this.list.refresh();
                                 this.list.renderArray([this.arrayList[this.arrayList.length - 1].title]);
+                                this.deleteBtn.set("disabled", false);
 
                                 this.hideLoading();
                             } else {
@@ -334,22 +337,23 @@ define([
                 },
                 deleteFromList: function () {
                     var index = [];
-                    for (var a in this.list.selection) {
-                        index.push(this.arrayList[parseInt(a)].title);
-                    }
-                    for (var a in index) {
-                        for (var b = this.arrayList.length - 1; b >= 0; b--) {
-                            if (index[a] === this.arrayList[b].title) {
-                                this.arrayList.splice(b, 1);
-                                break;
-                            }
-                        }
-                    }
+                    // for (var a in this.list.selection) {
+                    //     index.push(this.arrayList[parseInt(a)].title);
+                    // }
+                    // for (var a in index) {
+                    //     for (var b = this.arrayList.length - 1; b >= 0; b--) {
+                    //         if (index[a] === this.arrayList[b].title) {
+                    //             this.arrayList.splice(b, 1);
+                    //             break;
+                    //         }
+                    //     }
+                    // }
+                    this.arrayList = [];
                     this.list.refresh();
                     var tempList = [];
-                    for (var b in this.arrayList) {
-                        tempList.push(this.arrayList[b].title);
-                    }
+                    // for (var b in this.arrayList) {
+                    //     tempList.push(this.arrayList[b].title);
+                    // }
                     this.list.renderArray(tempList);
                     if (this.arrayList.length === 0) {
                         this.deleteBtn.set("disabled", true);
@@ -363,16 +367,13 @@ define([
                         for (var a in this.arrayList) {
                             temp.push(this.arrayList[a].title);
                         }
+                        this.list.refresh();
                         this.list.renderArray(temp);
                     }
-                    if (this.config.enableAddOIC)
-                        this.allowAddOIC.set("checked", true);
-                    else
-                        this.allowAddOIC.set("checked", false);
+                    
                 },
                 getConfig: function () {
                     this.config.oic = this.arrayList;
-                    this.config.enableAddOIC = this.allowAddOIC.get("checked");
                     return this.config;
                 },
                 errorNotification: function (text) {
