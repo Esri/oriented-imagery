@@ -519,7 +519,7 @@ def returnArcGISToken():
         aToken = signintoken['token']
         return aToken
     else:
-        return aToken
+        return None
 
 
 
