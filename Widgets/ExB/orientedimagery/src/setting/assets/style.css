@@ -1,0 +1,21 @@
+@charset "UTF-8";
+/* @import "calcite-web.css"; */
+@font-face {
+    font-family: "launchpad-icons";
+    src:url("fonts/launchpad-icons.eot");
+    src:url("fonts/launchpad-icons.eot?#iefix") format("embedded-opentype"),
+        url("fonts/launchpad-icons.woff") format("woff"),
+        url("fonts/launchpad-icons.ttf") format("truetype"),
+        url("fonts/launchpad-icons.svg#launchpad-icons") format("svg");
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+.oi-hideFeatureLayers {
+    display: none;
+}
+
+.oi-showFeatureLayers {
+    display: block;
+}
