@@ -1,8 +1,8 @@
 # Oriented Imagery
 
-This repo contains developer resources for Oriented Imagery, including 2D and 3D Web AppBuilder widgets, a description of the Oriented Imagery API, and a schema for oriented imagery catalogs (OICs). Learn more about [Oriented Imagery](https://doc.arcgis.com/en/imagery/workflows/resources/managing-and-visualizing-oriented-imagery.htm) on the Imagery Workflows site.
+This repo contains developer resources for Oriented Imagery, including 2D and 3D Web AppBuilder widgets, the Experience Builder widget, a description of the Oriented Imagery API, and a schema for oriented imagery catalogs (OICs). Learn more about [Oriented Imagery](https://doc.arcgis.com/en/imagery/workflows/resources/managing-and-visualizing-oriented-imagery.htm) on the Imagery Workflows site.
 
-Use the Oriented Imagery widgets for Web AppBuilder for ArcGIS to build web apps to explore oriented imagery (imagery not pointing straight down at the ground) from aerial, drone, or terrestrial sensors. App users select an oriented imagery catalog, click a location of interest on the map, then explore any available oblique, street-view, or inspection images that depict the area of interest using the inset viewer. As you pan and zoom in the oriented image, see the camera’s field of view dynamically updated on the map. Check out examples of a [2D app](https://oi1.img.arcgis.com/app/index.html) and a [3D app](https://oi1.img.arcgis.com/app3D/index.html) built with the widgets.
+Use the Oriented Imagery widgets for Web AppBuilder for ArcGIS and Experience Builder to build web apps to explore oriented imagery (imagery not pointing straight down at the ground) from aerial, drone, or terrestrial sensors. App users select an oriented imagery catalog, click a location of interest on the map, then explore any available oblique, street-view, or inspection images that depict the area of interest using the inset viewer. As you pan and zoom in the oriented image, see the camera’s field of view dynamically updated on the map. Check out examples of a [2D app](https://oi1.img.arcgis.com/app/index.html) and a [3D app](https://oi1.img.arcgis.com/app3D/index.html) built with the widgets.
 
 Also in this repo, find a description of the [Oriented Imagery API](OrientedImagery_API.pdf), which can be used to build custom oriented imagery applications. 
 
@@ -82,20 +82,28 @@ To view OICs in ArcGIS Pro, download the [Oriented Imagery add-in for ArcGIS Pro
 * API to help 3rd party developers
 
 
-### Instructions for using the widgets
+### Instructions for using the Web AppBuilder 3D widget
 
 1. Download and unzip the Oriented Imagery repo ZIP file
 2. Download and install [Web AppBuilder for ArcGIS (Developer Edition)](https://developers.arcgis.com/web-appbuilder/guide/getstarted.htm)
 3. Follow the instructions for [custom widget deployment](https://developers.arcgis.com/web-appbuilder/guide/deploy-custom-widget-and-theme.htm) 
 
+### Instructions for using the Experience Builder widget
+
+1. Download and unzip the Oriented Imagery repo ZIP file
+2. Download and install [ArcGIS Experience Builder (Developer Edition)](https://developers.arcgis.com/experience-builder/guide/)
+
+
 ### Requirements
 
 * ArcGIS Online or ArcGIS Enterprise portal account
-* Web AppBuilder for ArcGIS 2.9+ Developer Edition
+* Web AppBuilder for ArcGIS 2.15+ Developer Edition
+* ArcGIS Experience Builder 1.3+ Developer Edition
 
 ### Resources
 
 * [Web App Builder for ArcGIS (Developer Edition)](https://developers.arcgis.com/web-appbuilder/)
+* [ArcGIS Experience Builder (Developer Edition)](https://developers.arcgis.com/experience-builder/)
 * Examples of a [2D app](https://oi1.img.arcgis.com/app/index.html) and a [3D app](https://oi1.img.arcgis.com/app3D/index.html) built with Oriented Imagery widgets
 
 ## Issues
