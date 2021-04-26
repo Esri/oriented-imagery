@@ -70,12 +70,13 @@ define([
                     });
 
                     IdentityManager.useSignInPage = false;
-                    this.oauthInfo = new OAuthInfo({
-                        appId: "orientedimagery",
-                        portalUrl: "https://www.arcgis.com",
-                        popup: true
-                    });
-                    IdentityManager.registerOAuthInfos([this.oauthInfo]);
+                    //#837
+                    // this.oauthInfo = new OAuthInfo({
+                    //     appId: "orientedimagery",
+                    //     portalUrl: "https://www.arcgis.com",
+                    //     popup: true
+                    // });
+                    // IdentityManager.registerOAuthInfos([this.oauthInfo]);
 
                     this.sceneView.map.add(this.graphicsLayer);
                     this.sceneView.environment.lighting.cameraTrackingEnabled = true;
@@ -439,7 +440,7 @@ define([
                                             this.searchImages(this.selectedPoint, parseInt(this.selectedGraphicProperties.id));
                                         }
                                         //#607 #614
-                                        else if (response.results[0].graphic.attributes && response.results[0].graphic.attributes.OBJECTID && response.results[0].graphic.layer.url.includes('FeatureServer')) {
+                                        else if (response.results[0].graphic.attributes && response.results[0].graphic.attributes.OBJECTID && response.results[0].graphic.layer.url.includes('FeatureServer') && response.results[0].graphic.layer.url === this.config.oic[0].serviceUrl) { //875 issue fix
                                             this.showImage(evt.mapPoint, response.results[0].graphic.attributes.OBJECTID);
                                         } else {
                                             this.selectedPoint = mapPoint;   //#596
