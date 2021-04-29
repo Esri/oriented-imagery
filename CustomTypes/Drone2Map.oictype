@@ -6,7 +6,7 @@
 		"Imagery Type": "",
 		"Input Images SRS (WKID)": "",
 		"Terrain Average Elevation": ""		
-	}
+	},
 	"DefaultAttributes": {
 		"Oblique": {
 			"CamHeading": "",
