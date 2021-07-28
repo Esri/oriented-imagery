@@ -1,17 +1,14 @@
 {
-  "name": "orientedimagery",
+  "name": "oriented-imagery",
   "label": "Oriented Imagery",
   "type": "widget",
   "dependency": [
     "jimu-arcgis", 
-    "https://js.arcgis.com/4.18/dojo/resources/dojo.css", 
-    "https://js.arcgis.com/4.18/dijit/themes/claro/claro.css", 
-    "https://js.arcgis.com/4.18/esri/css/main.css", 
-    "https://oi1.img.arcgis.com/api/v2.6/main.js"
+    "https://oi1.img.arcgis.com/api/v2.7/main.js"
   ],
-  "settingDependency": ["jimu-arcgis"],
-  "version": "1.0",
-  "exbVersion": "1.3",
+  
+  "version": "2.7",
+  "exbVersion": "1.5",
   "author": "Esri",
   "description": "This is an Oriented Imagery Experience Builder widget",
   "copyright": "",
