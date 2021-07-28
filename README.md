@@ -15,6 +15,24 @@ To view OICs in ArcGIS Pro, download the [Oriented Imagery add-in for ArcGIS Pro
 
 ## What's new in Oriented Imagery developer resources
 
+### Version 2.7 (release July 2021)
+
+* What’s new in Oriented Imagery API:
+   - Use of item popup in image attribute viewer
+   - Tiff / COGG file support.
+   - Use of feature service item URL in OIC.
+   - Support to access OICs from IWA enabled portals.
+   - 360 degree video bug fix.
+   - Other bug fixes.
+
+* What’s new in Oriented Imagery 3D widget for Web AppBuilder For ArcGIS:
+   - Updated Oriented Imagery API to v2.7
+   - Several general fixes and performance and stability improvements.
+   
+* What’s new in Oriented Imagery widget for Experience Builder:
+   - Updated Oriented Imagery API to v2.7
+   - Bug fixes
+
 ### Version 2.6 (release April 2021)
 
 * What’s new in Oriented Imagery API:

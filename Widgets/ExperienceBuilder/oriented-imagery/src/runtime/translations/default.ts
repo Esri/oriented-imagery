@@ -18,7 +18,7 @@
   LICENSE file.
 */
 export default {
-    _widgetLabel: 'OrientedImagery',
+    _widgetLabel: 'Oriented Imagery',
     toggleButtonOn: 'Turn off to select features in map',
     toggleButtonOff: 'Turn on to pick a focus point in map to view image',
     exposure: 'Image exposure points',

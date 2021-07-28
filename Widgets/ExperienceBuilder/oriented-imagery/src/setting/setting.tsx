@@ -1,15 +1,11 @@
 import { React, Immutable, DataSourceManager, css } from 'jimu-core';
 import { BaseWidgetSetting, AllWidgetSettingProps } from 'jimu-for-builder';
 import { JimuMapViewSelector, SettingSection, SettingRow } from 'jimu-ui/advanced/setting-components';
-import { ArcGISDataSourceTypes, MapViewManager } from 'jimu-arcgis';
+import { ArcGISDataSourceTypes, MapViewManager, loadArcGISJSAPIModules } from 'jimu-arcgis';
 import { Select, Option, Button, Checkbox, Label, TextInput, Tooltip, Switch, Icon, Collapse } from 'jimu-ui';
 import { IMConfig } from '../config';
-import arcgisPortal = require("esri/portal/Portal");
-import esriRequest = require('esri/request');
-import IdentityManager = require('esri/identity/IdentityManager');
 import defaultMessages from './translations/default';
 import { ChangeEvent } from 'react';
-import MapView = require('esri/views/MapView');
 import './assets/style.css';
 
 interface State {
@@ -23,6 +19,7 @@ interface State {
   featureList: any,
   showDropdown: boolean,
   layerEditCollapseFlags: any
+  apiLoaded: boolean;
 }
 
 const arrowDown = require('jimu-ui/lib/icons/arrow-down-12.svg');
@@ -33,10 +30,14 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
   dsManager = DataSourceManager.getInstance();
   userContentInfo: any;
   OICList: any[];
-  mapView: MapView;
+  mapView: any;
   mvManager: MapViewManager = MapViewManager.getInstance();
   vectorLayers: any[];
   featureLayerCss: string = "oi-hideFeatureLayers"; 
+  Portal: typeof __esri.Portal;
+  esriRequest: typeof __esri.request;
+  IdentityManager: typeof __esri.IdentityManager;
+  MapView: typeof __esri.MapView;
   
 
   constructor(props) {
@@ -52,7 +53,8 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
       featureList: [],
       oic: null,
       showDropdown: false,
-      layerEditCollapseFlags: {}
+      layerEditCollapseFlags: {},
+      apiLoaded: false
     };
 
     this.getOICfromUrl = this.getOICfromUrl.bind(this);
@@ -69,6 +71,10 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
     this.addOICToList = this.addOICToList.bind(this);
     this.deleteOICList = this.deleteOICList.bind(this);
     this.enableEditing = this.enableEditing.bind(this);
+
+    
+    
+
   }
 
   onMapSelected = (useMapWidgetIds: any) => {
@@ -85,7 +91,7 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
       let layers = this.mapView.map.layers;
       for (let i = 0; i < layers.length; i++) {
         if (layers.getItemAt(i).type === 'feature') {
-          let layer = {};
+          let layer: any = {};
           layer.title = layers.getItemAt(i).title;
           layer.id = layers.getItemAt(i).id;
           this.vectorLayers.push({ featureLayer: layer, addToViewer: false, editing: false});
@@ -106,18 +112,27 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
     return this.props.intl ? this.props.intl.formatMessage({ id: id, defaultMessage: defaultMessages[id] }) : id;
   }
 
-  componentDidMount() {
-    if (this.props.config.oicList.length > 0) {
-      this.OICList = this.props.config.oicList;
-    } else {
-      this.OICList = [];
+  async componentDidMount() {
+    if (!this.state.apiLoaded) {
+      await loadArcGISJSAPIModules(['esri/portal/Portal', 'esri/request']).then((modules) => {
+        [this.Portal, this.esriRequest] = modules;
+        this.setState({
+          apiLoaded: true
+        });
+      });
+      if (this.props.config.oicList.length > 0) {
+        this.OICList = this.props.config.oicList;
+      } else {
+        this.OICList = [];
+      }
+      this.getOICFromUserAcc();
     }
-    this.getOICFromUserAcc();
+    
 
   }
 
   getOICFromUserAcc = () => {
-    var portal = new arcgisPortal({ url: this.props.portalUrl });
+    var portal = new this.Portal({ url: this.props.portalUrl });
     portal.load().then((user) => {
       if (!this.userContentInfo) {
         this.userContentInfo = {
@@ -142,7 +157,7 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
   }
 
   getOrganisationGroups = (user) => {
-    esriRequest(user.restUrl + '/community/groups', {
+    this.esriRequest(user.restUrl + '/community/groups', {
       query: {
         f: "json",
         q: "orgid:" + this.props.user.orgId,
@@ -162,7 +177,7 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
   }
 
   getOICFromFolders = (user) => {
-    esriRequest(user.restUrl + '/content/users/' + this.props.user.username, {
+    this.esriRequest(user.restUrl + '/content/users/' + this.props.user.username, {
       query: {
         f: "json",
         token: this.props.token
@@ -263,7 +278,7 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
 
   getOICFromFolder = (value) => {
     var id = this.userContentInfo.myFolders[value].id;
-    esriRequest(this.userContentInfo.user.restUrl + "/content/users/" + this.props.user.username + '/' + id, {
+    this.esriRequest(this.userContentInfo.user.restUrl + "/content/users/" + this.props.user.username + '/' + id, {
       query: {
         f: "json",
         token: this.props.token
@@ -311,7 +326,7 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
 
   getOICFromGroup = (value) => {
     var id = this.userContentInfo.myGroups[value] ? this.userContentInfo.myGroups[value].id : this.userContentInfo.myOrgGroups[value].id; //groupchange
-    esriRequest(this.userContentInfo.user.restUrl + "/content/groups/" + id, {
+    this.esriRequest(this.userContentInfo.user.restUrl + "/content/groups/" + id, {
       query: {
         f: "json",
         token: this.props.token
@@ -388,7 +403,7 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
       var itemUrl = url.split("/home")[0] + "/sharing/rest/content/items/" + (url.split("id=")[1]).split("/")[0];   //#530
       // else
       //     var itemUrl = "https://www.arcgis.com" + "/sharing/rest/content/items/" + (url.split("id=")[1]).split("/")[0];
-      esriRequest(itemUrl, {
+      this.esriRequest(itemUrl, {
         query: {
           f: "json",
           token: this.props.token
@@ -486,40 +501,33 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
     
   }
 
-  // handleEditingDropdown = evt => {
-  //   const { showDropdown } = this.state;
-  //   this.setState({ showDropdown: !showDropdown });
-  // }
-
-
-
   render() {
     let oicBlock = [];
     let content;
-
-    const { showDropdown } = this.state;
-
     //#839
     if (this.props.useMapWidgetIds && !this.mapView) {
       this.onMapSelected(this.props.useMapWidgetIds);
     }
 
     if (this.OICList && this.OICList.length) {
+      console.log("oic list " + this.OICList);
       oicBlock = this.OICList.map((oic, i) => {
-        return <span style={{ color: 'black' }}>{oic.name}<br /></span>
+        return <span style={{ color: 'black' }} key={i}>{oic.name}<br /></span>
       });
     }
 
     this.featureLayerCss = this.props.config.editingEnabled ? "oi-showFeatureLayers" : "oi-hideFeatureLayers"; //#861
-    
 
+    const { showDropdown } = this.state;
+
+    
     if (this.state.selectContent === 'itemurl') {
       content = <SettingRow><TextInput id='oic-itemurl' placeholder="Item url" onAcceptValue={this.getOICfromUrl} /> </SettingRow>
     } else {
       content = <><SettingRow><Select placeholder='Select group/folder' style={{ display: 'inline-block', width: '16.35rem', maxWidth: '16.35rem !important' }} onChange={this.populateOICList}>
         {
           this.state.contentList.map((item, i) => {
-            return <Option value={item}>{item}</Option>
+            return <Option value={item} key={i}>{item}</Option>
           }
           )}
       </Select></SettingRow>
@@ -527,7 +535,7 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
           <Select placeholder='Select OIC' style={{ display: 'inline-block', width: '16.35rem', maxWidth: '16.35rem !important' }} onChange={this.chooseOIC} value={this.state.oic ? this.state.oic.url : null}>
             {
               this.state.itemList.map((oic, i) => {
-                return <Option value={oic.value}>{oic.name}</Option>
+                return <Option value={oic.value} key={i}>{oic.name}</Option>
               })
             }
           </Select></SettingRow></>
@@ -541,7 +549,7 @@ export default class Setting extends BaseWidgetSetting<AllWidgetSettingProps<IMC
         //#861
         //#872
         let editingEnabled = (this.mapView.map.findLayerById(product.featureLayer.id) as any)?.editingEnabled && (this.mapView.map.findLayerById(product.featureLayer.id) as any)?.capabilities?.operations?.supportsEditing ? true : false;
-        return <SettingRow flow="wrap" className={this.featureLayerCss} label={
+        return <SettingRow flow="wrap" key={i} className={this.featureLayerCss} label={
           <div className="w-100 d-flex">
             {/* <Tooltip placement="top" showArrow={true} title={this.nls('addToViewer')}> */}
               <span className="d-inline-flex"><Checkbox checked={product.addToViewer} onChange={this.enableLayerView} id={product.featureLayer.id + '-add'} />

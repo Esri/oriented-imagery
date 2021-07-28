@@ -30,7 +30,7 @@ define([
     "esri/layers/WMTSLayer",
     "esri/layers/WMSLayer",
     "esri/layers/KMLLayer", "dijit/registry",
-    "https://oi1.img.arcgis.com/api/v2.6/main.js",
+    "https://oi1.img.arcgis.com/api/v2.7/main.js",
     "dijit/form/Select",
     "dijit/form/Button",
     "dijit/form/CheckBox",
@@ -63,6 +63,15 @@ define([
                     this.inherited(arguments);
                 },
                 postCreate: function () {
+                    // removing old instance of oi-graphicsLayer before adding a new instance of the layer
+                    // this is done because otherwise reordering of 2 layers with same id is causing issues
+                    // (reordering of layers for issue #610)
+                    if (this.sceneView.map.findLayerById("oi-graphicsLayer")) {
+                        this.sceneView.map.remove(this.sceneView.map.findLayerById("oi-graphicsLayer"));
+                    }
+                    ////
+
+                    this.portalUrl = this.appConfig.portalUrl.charAt(this.appConfig.portalUrl.length - 1) === "/" ? this.appConfig.portalUrl : this.appConfig.portalUrl + "/";
                     this.graphicsLayer = new GraphicsLayer({
                         id: "oi-graphicsLayer",
                         title: "Oriented Imagery",
@@ -306,7 +315,7 @@ define([
                         domStyle.set(this.oiwidget, "height", "auto");
                     }, 300);
                 },
-                addOIC: function () {
+                addOIC: async function () {
                     if (this.overviewLayer) {
                         this.sceneView.map.remove(this.overviewLayer);
                         this.overviewLayer = null;
@@ -316,7 +325,48 @@ define([
                     this.graphicExists = false;
                     this.graphicsLayer.graphics.removeAll();
 
+                    //#1004
+                    if (window.location.href.indexOf('oic') !== -1) {
+                        var v = window.location.href.split('oic=')[1];
+                        if (v) {
+                           await esriRequest(this.portalUrl + "sharing/rest/content/items/" + v.split("&")[0] + "/data", {
+                                query: {
+                                    f: "json" 
+                                },
+                                responseType: "json"
+                           }).then(lang.hitch(this, function(resp) {
+                            this.config.oic[0] = {
+                                title: resp.data.properties.Name,
+                                    serviceUrl: resp.data.properties.ServiceURL,
+                                    overviewUrl: resp.data.properties.OverviewURL,
+                                    itemUrl: this.portalUrl + "home/item.html?id=" + v.split("&")[0]
+                            }
+                           }));    
+                        }
+                    }
+                    ///
                     var url = this.config.oic[0].serviceUrl;
+                    //#705
+                    if (url.includes("item.html?")) {
+                        var itemurl = url.split("/home")[0] + "/sharing/rest/content/items/" + (url.split("id=")[1]).split("/")[0];
+                        await esriRequest(itemurl, {
+                            query: {
+                                f: "json",
+                            },
+                            responseType: "json"
+                        }).then(lang.hitch(this, async function (response) {
+                            url = response.data.url;
+                            await esriRequest(itemurl + "/data", {
+                                query: {
+                                    f: "json",
+                                },
+                                responseType: "json"
+                            }).then(lang.hitch(this, function (resp) {
+                                url = url + "/" + resp.data.layers[0].id;
+                            }));
+
+                        }));
+                    }
                     if (url.indexOf("ImageServer") === -1) {
                         var query = new Query();
                         query.where = "1=1";
@@ -359,8 +409,15 @@ define([
                     if (this.config.oic[0].overviewUrl) {
                         this.layerModuleSelector(this.config.oic[0].overviewUrl);
                     } else {  //issue #607
-                        if (this.config.oic[0].serviceUrl.indexOf("ImageServer") === -1)
-                            this.layerModuleSelector(this.config.oic[0].serviceUrl);
+                        if (this.config.oic[0].serviceUrl.indexOf("ImageServer") === -1) {
+                            //#705
+                            if (this.config.oic[0].serviceUrl.includes("item.html?")) {
+                                this.layerModuleSelector(url);
+                            } else {
+                                this.layerModuleSelector(this.config.oic[0].serviceUrl);
+                            }
+                        }
+                            
                     }
                 },
                 turningOnOffFeatures: function (selectedFeatures, state) {
@@ -439,9 +496,15 @@ define([
                                             this.selectedGraphicProperties = {imgUrn: null, geometry: response.results[0].graphic.geometry, id: response.results[0].graphic.attributes.imageID, highlight: null};
                                             this.searchImages(this.selectedPoint, parseInt(this.selectedGraphicProperties.id));
                                         }
-                                        //#607 #614
-                                        else if (response.results[0].graphic.attributes && response.results[0].graphic.attributes.OBJECTID && response.results[0].graphic.layer.url.includes('FeatureServer') && response.results[0].graphic.layer.url === this.config.oic[0].serviceUrl) { //875 issue fix
-                                            this.showImage(evt.mapPoint, response.results[0].graphic.attributes.OBJECTID);
+                                        //#607 #614 #992
+                                        else if (response.results[0].graphic.attributes && response.results[0].graphic.attributes.OBJECTID && response.results[0].graphic.layer.url.includes('FeatureServer')) { //875 issue fix 
+                                            var layer = response.results[0].graphic.layer.url + "/" + response.results[0].graphic.layer.layerId;
+                                            if(layer === this.config.oic[0].serviceUrl)
+                                               this.showImage(evt.mapPoint, response.results[0].graphic.attributes.OBJECTID);
+                                            else {
+                                               this.selectedPoint = evt.mapPoint;
+                                               this.searchImages(evt.mapPoint);                                                      
+                                            }
                                         } else {
                                             this.selectedPoint = mapPoint;   //#596
                                             this.searchImages(mapPoint);
@@ -470,7 +533,7 @@ define([
                                 this.graphicsLayer.graphics.removeAll();
                                 this.graphicsLayer.add(new Graphic({geometry: point, symbol: this.crossSymbol, attributes: {id: "oi-focusPoint"}}));
                                 this.showLoading();
-                                var location = this.currentImageCameraLocation ? this.currentImageCameraLocation.clone() : this.sceneView.camera.position.clone();
+                                var location = this.sceneView.camera.position.clone(); //#980
                                 this.orientedViewer.showImage(pointJSON, url, {
                                     token: {token: this.preserveToken && this.preserveToken.token ? this.preserveToken.token : null, server: this.preserveToken && this.preserveToken.server ? this.preserveToken.server + '/sharing/rest' : null}, maxDistance: 1000, extent: this.sceneView.extent.toJSON(), mapSize: {w: this.sceneView.width, h: this.sceneView.height},
                                     mapSize: {w: this.sceneView.width, h: this.sceneView.height},
@@ -506,7 +569,7 @@ define([
                                 this.graphicsLayer.add(new Graphic({geometry: point, symbol: this.crossSymbol, attributes: {id: "oi-focusPoint"}}));
                                 this.showLoading();
 
-                                var location = this.currentImageCameraLocation ? this.currentImageCameraLocation.clone() : this.sceneView.camera.position.clone();
+                                var location = this.sceneView.camera.position.clone();//#980
 
                                 this.orientedViewer.searchImages(pointJSON, url, {
                                     token: {token: this.preserveToken && this.preserveToken.token ? this.preserveToken.token : null, server: this.preserveToken && this.preserveToken.server ? this.preserveToken.server + '/sharing/rest' : null},
@@ -712,7 +775,9 @@ define([
                             this.overviewLayer.visible = true;
                         else
                             this.overviewLayer.visible = false;
-                    } else {
+                    } 
+                    //#935
+                    if (!this.config.oic[0].OverviewURL) {
                         for (var s = 0; s <= this.graphicsLayer.graphics.items.length - 1; s++) {
                             if (this.graphicsLayer.graphics.items[s].symbol && this.graphicsLayer.graphics.items[s].symbol.style === "solid" && this.graphicsLayer.graphics.items[s].attributes.coverageMap) {
                                 this.graphicsLayer.remove(this.graphicsLayer.graphics.items[s]);
@@ -722,18 +787,8 @@ define([
                         if (value && this.config.oic.length && this.oiApiLoaded) {
                             this.orientedViewer.getCoverageMap(this.sceneView.extent.toJSON(), this.config.oic[0].itemUrl).then(lang.hitch(this, function (response) {
                                 if (response.coverageMap) {
-                                    var multiPoint = new Multipoint({spatialReference: this.sceneView.spatialReference, points: this.createMultiPoint({type: "polygon", geometries: [response.coverageMap]})});
-                                    this.queryElevation(multiPoint).then(lang.hitch(this, function (result) {
-                                        var cv = 0;
-                                        for (var gm = 0; gm < response.coverageMap.rings.length; gm++) {
-                                            for (var mb = 0; mb < response.coverageMap.rings[gm].length; mb++)
-                                                response.coverageMap.rings[gm][mb][2] = result.geometry.points[cv][2];
-                                            cv++;
-                                        }
-
-                                        var graphic = new Graphic({geometry: new Polygon(response.coverageMap), symbol: this.coverageMapSymbol, attributes: {"coverageMap": true}});
-                                        this.graphicsLayer.add(graphic);
-                                    }));
+                                    var graphic = new Graphic({ geometry: new Polygon(response.coverageMap), symbol: this.coverageMapSymbol, attributes: { "coverageMap": true } });
+                                    this.graphicsLayer.add(graphic);
                                 }
                             }));
                         }
@@ -986,9 +1041,9 @@ define([
                                 });
                                 var camera = this.sceneView.camera.clone();
                                 camera.fov = cam.fov;
-                                camera.heading = cam.heading; //camheading error fix
-                                this.sceneView.camera = camera;
-                                this.sceneView.goTo(cam).then(lang.hitch(this, function () {
+                                //camera.heading = cam.heading; //camheading error fix //#969
+                                this.sceneView.camera = camera; 
+                                this.sceneView.goTo(cam,{easing:"linear"}).then(lang.hitch(this, function () { //#969
                                     this.changeLayersVisibility(false);
                                     this.graphicsLayer.add(graphic);
 
@@ -1003,9 +1058,9 @@ define([
                             });
                             var camera = this.sceneView.camera.clone();
                             camera.fov = cam.fov;
-                            camera.heading = cam.heading;
-                            this.sceneView.camera = camera;
-                            this.sceneView.goTo(cam).then(lang.hitch(this, function () {
+                            //camera.heading = cam.heading;//#969
+                            this.sceneView.camera = camera; 
+                            this.sceneView.goTo(cam,{easing:"linear"}).then(lang.hitch(this, function () {//#969
                                 this.changeLayersVisibility(false);
                                 this.graphicsLayer.add(graphic);
 
@@ -1097,9 +1152,9 @@ define([
                             this.currentImageCameraLocation = result.geometry.clone();
                             var camera = this.sceneView.camera.clone();
                             camera.fov = cam.fov;
-                            camera.heading = cam.heading;
+                            //camera.heading = cam.heading;//#969
                             this.sceneView.camera = camera;
-                            this.sceneView.goTo(cam).then(lang.hitch(this, function () {
+                            this.sceneView.goTo(cam,{easing:"linear"}).then(lang.hitch(this, function () { //#969
                                 return def.resolve();
                             }));
                         }));

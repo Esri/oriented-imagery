@@ -18,28 +18,28 @@
   LICENSE file.
 */
 /** @jsx jsx */
-import { jsx, BaseWidget, AllWidgetProps, ReactResizeDetector } from 'jimu-core';
-import { JimuMapViewComponent, JimuMapView } from 'jimu-arcgis';
-import { Button, Select, Option, Icon, Checkbox, Switch, Tooltip, Resizable } from 'jimu-ui';
+import { React, jsx, BaseWidget, AllWidgetProps, ReactResizeDetector } from 'jimu-core';
+import { JimuMapViewComponent, JimuMapView, loadArcGISJSAPIModules } from 'jimu-arcgis';
+import { IMConfig } from '../config';
 import defaultMessages from './translations/default';
-import esriRequest = require('esri/request');
-import Point = require('esri/geometry/Point');
-import GraphicsLayer = require('esri/layers/GraphicsLayer');
-import Graphic = require('esri/Graphic');
+import * as esriRequest from 'esri/request';
+import * as Point from 'esri/geometry/Point';
+import * as GraphicsLayer from 'esri/layers/GraphicsLayer';
+import * as Graphic from 'esri/Graphic';
 import { Polygon, Extent, Multipoint, SpatialReference, Polyline } from 'esri/geometry';
 import { ChangeEvent } from 'react';
-import Layer = require('esri/layers/Layer');
-import WMTSLayer = require('esri/layers/WMTSLayer');
-import WMSLayer = require('esri/layers/WMSLayer');
-import KMLLayer = require('esri/layers/KMLLayer');
-import Query = require('esri/tasks/support/Query');
-import QueryTask = require('esri/tasks/QueryTask');
-import ProjectParameters = require('esri/tasks/support/ProjectParameters');
-import geometryEngine = require('esri/geometry/geometryEngine');
-import FeatureForm = require('esri/widgets/FeatureForm');
-import Camera = require('esri/Camera');
-import promiseUtils = require('esri/core/promiseUtils');
-import Mesh = require("esri/geometry/Mesh");
+import * as Layer from 'esri/layers/Layer';
+import * as WMTSLayer from 'esri/layers/WMTSLayer';
+import * as WMSLayer from 'esri/layers/WMSLayer';
+import * as KMLLayer from 'esri/layers/KMLLayer';
+import * as Query from 'esri/rest/support/Query';
+import * as QueryTask from 'esri/tasks/QueryTask';
+import * as ProjectParameters from 'esri/rest/support/ProjectParameters';
+import * as geometryEngine from 'esri/geometry/geometryEngine';
+import * as FeatureForm from 'esri/widgets/FeatureForm';
+import * as Camera from 'esri/Camera';
+import * as promiseUtils from 'esri/core/promiseUtils';
+import * as Mesh from "esri/geometry/Mesh";
 import './assets/calcite.css';
 import './assets/style.css';
 
@@ -52,11 +52,13 @@ interface State {
   currentCoverageDisabled: boolean,
   similarCoverageDisabled: boolean,
   imagePointsDisabled: boolean,
-  sceneModePaneView: string
+  sceneModePaneView: string,
+  apiLoaded: boolean;
+  config: any;
 }
 
 
-export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
+export default class Widget extends BaseWidget<AllWidgetProps<IMConfig>, State>{
   //state: State = { extent: null };
   mapView: any;
   orientedViewer: any;
@@ -71,7 +73,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
   coverageMapSymbol: { type: string; style: string; outline: any; color: number[]; };
   currentImagePoint: any;
   selectLocationFlag: boolean = true;
-  graphicsLayer: GraphicsLayer;
+  graphicsLayer: any;
   graphicExists: boolean;
   imageProperties: any;
   activeImageID: any;
@@ -87,7 +89,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
   preserveToken: any;
   selectedAsset: any;
   WMSF: number;
-  currentImageCameraLocation: Point | __esri.Multipoint | __esri.Polyline;
+  currentImageCameraLocation: any | __esri.Multipoint | __esri.Polyline;
   layerVisibleStatus: { g: any[]; b: any[]; o: any[]; };
   zoomHandlers: any[];
   activeFrustumSymbol: any;
@@ -105,6 +107,36 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
   selectedExposurePoint: { geometry: any; id: any; };
   avgGroundElevation: any;
   clickEvent: any;
+  mapClickEventHandler: any;
+  mapPopupHandler1: any;
+  mapPopupHandler2: any;
+  greenLineSymbol: { type: string; width: number; style: string; color: number[]; };
+  oiviewerRef: any;
+
+  //js modules declaration
+  // esriRequest: typeof __esri.request;
+  // Point: typeof __esri.Point;
+  // GraphicsLayer: typeof __esri.GraphicsLayer;
+  // Graphic: typeof __esri.Graphic;
+  // Polygon: typeof __esri.Polygon;
+  // Extent: typeof __esri.Extent;
+  // Multipoint: typeof __esri.Multipoint;
+  // SpatialReference: typeof __esri.SpatialReference;
+  // Polyline: typeof __esri.Polyline;
+  // Layer: typeof __esri.Layer;
+  // WMTSLayer: typeof __esri.WMTSLayer;
+  // WMSLayer: typeof __esri.WMSLayer;
+  // KMLLayer: typeof __esri.KMLLayer;
+  // Query: typeof __esri.Query;
+  // QueryTask: typeof __esri.QueryTask;
+  // ProjectParameters: typeof __esri.ProjectParameters;
+  // geometryEngine: typeof __esri.geometryEngine;
+  // FeatureForm: typeof __esri.FeatureForm;
+  // Camera: typeof __esri.Camera;
+  // promiseUtils: typeof __esri.promiseUtils;
+  // Mesh: typeof __esri.Mesh;
+  //
+ 
 
   constructor(props) {
     super(props);
@@ -117,50 +149,12 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
       currentCoverageDisabled: true,
       similarCoverageDisabled: true,
       imagePointsDisabled: true,
-      sceneModePaneView: 'none'
-    };
-
-    this.addOICItem = this.addOICItem.bind(this);
-    this.loadOrientedImageryApi = this.loadOrientedImageryApi.bind(this);
-    this.searchImages = this.searchImages.bind(this);
-    this.layerModuleSelector = this.layerModuleSelector.bind(this);
-    this.showAttributeWindow = this.showAttributeWindow.bind(this);
-    this.setupResizeHandle = this.setupResizeHandle.bind(this);
-    this.setViewMode = this.setViewMode.bind(this);
-    this.setCameraView = this.setCameraView.bind(this);
-    this.enableZoom = this.enableZoom.bind(this);
-    this.disableZoom = this.disableZoom.bind(this);
-    this.addAllVectorLayers = this.addAllVectorLayers.bind(this);
-    this.toggleIcon = this.toggleIcon.bind(this);
-    this.setupSymbols = this.setupSymbols.bind(this);
-    this.mapClickEvent = this.mapClickEvent.bind(this);
-    this.drawPointAndPolygons = this.drawPointAndPolygons.bind(this);
-    this.drawCoveragePolygons = this.drawCoveragePolygons.bind(this);
-    this.drawImageSourcePoints = this.drawImageSourcePoints.bind(this);
-    this.updateCoveragePolygon = this.updateCoveragePolygon.bind(this);
-    this.updateGraphics = this.updateGraphics.bind(this);
-    this.createCoverageArea = this.createCoverageArea.bind(this);
-    this.drawFrustums = this.drawFrustums.bind(this);
-    this.showPointOnMap = this.showPointOnMap.bind(this);
-    this.groundToImage = this.groundToImage.bind(this);
-    this.turningOnOffFeatures = this.turningOnOffFeatures.bind(this);
-    this.removeVectorLayers = this.removeVectorLayers.bind(this);
-    this.addFeature = this.addFeature.bind(this);
-    this.deleteFeature = this.deleteFeature.bind(this);
-    this.selectFeature = this.selectFeature.bind(this);
-    this.graphicSelected = this.graphicSelected.bind(this);
-    this.findImageInCatalog = this.findImageInCatalog.bind(this);
-    this.openImageInViewer = this.openImageInViewer.bind(this);
-    this.zoomImageInView = this.zoomImageInView.bind(this);
-    this.panImageInView = this.panImageInView.bind(this);
-    this.updateViewCamera = this.updateViewCamera.bind(this);
-    this.updateImageInView = this.updateImageInView.bind(this);
-    this.deleteImageInView = this.deleteImageInView.bind(this);
-    this.createMultiPoint = this.createMultiPoint.bind(this);
-    this.addImageInView = this.addImageInView.bind(this);
-    this.setViewConstraints = this.setViewConstraints.bind(this);
-    this.changeLayersVisibility = this.changeLayersVisibility.bind(this);
-
+      sceneModePaneView: 'none',
+      apiLoaded: false,
+      config: {}
+    } as State;
+    //#1000
+    this.oiviewerRef = React.createRef(); 
 
   }
 
@@ -169,61 +163,62 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
   }
 
   isConfigured = () => {
-    console.log(this.props.useMapWidgetIds);
+    // console.log(this.props.useMapWidgetIds);
     return this.props.useMapWidgetIds && this.props.useMapWidgetIds.length === 1;
   }
+
 
   onActiveViewChange = (jimuMapView: JimuMapView) => {
     if (jimuMapView) {
       this.mapView = jimuMapView.view;
 
-      this.mapView.on('click', this.mapClickEvent.bind(this));
-      this.mapView.popup.watch("selectedFeature", this.graphicSelected.bind(this));
-      this.mapView.popup.watch("visible", (visible) => {
-        if (!visible && this.featureSelected) {
-          this.orientedViewer.deselectFeaturesInImage(this.featureSelected);
-          document.getElementById("viewGraphicBtn").style.display = "none";
-        }
-      });
-      if (!this.config) {
-        this.config = {
-          oic: []
-        };
+      
+      if (!this.state.config) {
+        this.setState({
+          config: {
+            oic: []
+          }
+        });
       }
-      this.loadOrientedImageryApi();
+      //this.loadOrientedImageryApi(); //#1000
       this.setupSymbols();
 
-
-      if (this.mapView.type === '2d') {
-        // document.getElementById('3dmode').style.display = 'none';
-        this.graphicsLayer = new GraphicsLayer({
-          id: "oi-graphicsLayer",
-          title: "Oriented Imagery",
-          elevationInfo: { mode: "on-the-ground", Offset: 0 }
-        } as any);
-        this.orientedViewer?.setEnvironment("2D"); //#818
-      } else {
-        // document.getElementById('3dmode').style.display = 'inline-block';
-        this.graphicsLayer = new GraphicsLayer({
-          id: "oi-graphicsLayer",
-          title: "Oriented Imagery",
-          elevationInfo: { mode: "absolute-height", Offset: 0 }
-        } as any);
-
-        //#818
-        this.orientedViewer?.setHeightModelInfo({ "heightModel": this.mapView.heightModelInfo?.heightModel, "heightUnit": this.mapView.heightModelInfo?.heightUnit });  // #670 issue
-        this.orientedViewer?.setEnvironment("3D");
-
-      }
-
-      if (!this.mapView.map.findLayerById(this.graphicsLayer.id)) {
+      if (this.graphicsLayer) {
+        if (this.mapView.type === '2d') {
+          // document.getElementById('3dmode').style.display = 'none';
+          // this.graphicsLayer = new this.GraphicsLayer({
+          //   id: "oi-graphicsLayer",
+          //   title: "Oriented Imagery",
+          //   elevationInfo: { mode: "on-the-ground", Offset: 0 }
+          // } as any);
+          this.graphicsLayer.elevationInfo = { mode: "on-the-ground", offset: 0 };
+          this.orientedViewer?.setEnvironment("2D"); //#818
+        } else {
+          // document.getElementById('3dmode').style.display = 'inline-block';
+          // this.graphicsLayer = new this.GraphicsLayer({
+          //   id: "oi-graphicsLayer",
+          //   title: "Oriented Imagery",
+          //   elevationInfo: { mode: "absolute-height", Offset: 0 }
+          // } as any);
+          this.graphicsLayer.elevationInfo = { mode: "absolute-height", offset: 0 }
+          //#818
+          this.orientedViewer?.setHeightModelInfo({ "heightModel": this.mapView.heightModelInfo?.heightModel, "heightUnit": this.mapView.heightModelInfo?.heightUnit });  // #670 issue
+          this.orientedViewer?.setEnvironment("3D");
+  
+        }
+  
+        if (this.mapView.map.findLayerById(this.graphicsLayer.id)) {
+          this.mapView.map.remove(this.graphicsLayer);
+        }
         this.mapView.map.add(this.graphicsLayer);
       }
+      
 
       if (!this.mapView.ui.find("oic-click-btn")) {
         var node = document.createElement("div");
         node.innerHTML = `<button title="Turn on to pick a focus point in scene to view image" class="oi-btn-css oi-btn-css-clear oi-widget-selectBtnSelected oi-btn-css-grouped oi-widget-selectBtn" style="width:32px;height:32px;border-color:transparent;padding:0px;margin-top:-40px;" id="selectPointBtn"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" style="" class="svg-icon"><path d="M15.999 0C11.214 0 8 1.805 8 6.5v17l7.999 8.5L24 23.5v-17C24 1.805 20.786 0 15.999 0zM16 14.402A4.4 4.4 0 0 1 11.601 10a4.4 4.4 0 1 1 8.798 0A4.4 4.4 0 0 1 16 14.402z"/></svg></button>`;
         node.id = "oic-click-btn";
+        node.setAttribute("style", "z-index: 100"); //#943
 
         this.mapView.ui.add(node, {
           position: "bottom-right",
@@ -231,10 +226,22 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
         });
       }
       
-        document.getElementsByClassName("oi-widget-selectBtn")[0].removeEventListener("click", this.toggleIcon);
+      this.mapClickEventHandler = this.mapView.on('click', this.mapClickEvent.bind(this));
+      this.mapPopupHandler1 = this.mapView.popup.watch("selectedFeature", this.graphicSelected.bind(this));
+      this.mapPopupHandler2 = this.mapView.popup.watch("visible", (visible) => {
+        if (!visible && this.featureSelected) {
+          this.orientedViewer.deselectFeaturesInImage(this.featureSelected);
+          document.getElementById("viewGraphicBtn").style.display = "none";
+        }
+      });
+
+      for (let i=0; i<document.getElementsByClassName("oi-widget-selectBtn").length; i++) {
+        document.getElementsByClassName("oi-widget-selectBtn")[i].removeEventListener("click", this.toggleIcon.bind(this, i));
         
       
-      document.getElementsByClassName("oi-widget-selectBtn")[0].addEventListener("click", this.toggleIcon);
+        document.getElementsByClassName("oi-widget-selectBtn")[i].addEventListener("click", this.toggleIcon.bind(this, i));
+      }
+        
 
       if (this.overviewLayer) {
         if (!this.mapView.map.findLayerById(this.overviewLayer.id)) {
@@ -243,28 +250,159 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
         }
       }
 
-      //issue #610
+      // //issue #610
       // this.mapView.map.layers.on("after-add", () => {
       //   this.mapView.map.reorder(this.graphicsLayer, this.mapView.map.layers.length - 1);
       // });
+
+      
     }
   }
 
-  componentDidMount() {
-    this.config = {
-      oic: []
+  async componentDidMount() {
+    // if (!this.state.apiLoaded) {
+      // await loadArcGISJSAPIModules(['esri/request', 'esri/geometry/Point', 'esri/layers/GraphicsLayer',
+      // 'esri/Graphic','esri/geometry/Polygon', 'esri/geometry/Extent', 'esri/geometry/Multipoint',
+      // 'esri/geometry/SpatialReference', 'esri/geometry/Polyline', 'esri/layers/Layer',
+      // 'esri/layers/WMTSLayer', 'esri/layers/WMSLayer', 'esri/layers/KMLLayer',
+      // 'esri/rest/support/Query', 'esri/tasks/QueryTask', 'esri/rest/support/ProjectParameters',
+      // 'esri/geometry/geometryEngine', 'esri/widgets/FeatureForm', 'esri/Camera', 
+      // 'esri/core/promiseUtils', 'esri/geometry/Mesh']).then((modules) => {
+        // [this.esriRequest, this.Point, this.GraphicsLayer, this.Graphic, this.Polygon,
+        // this.Extent, this.Multipoint, this.SpatialReference, this.Polyline, this.Layer,
+        // this.WMTSLayer, this.WMSLayer, this.KMLLayer, this.Query, this.QueryTask,
+        // this.ProjectParameters, this.geometryEngine, this.FeatureForm, this.Camera,
+        // this.promiseUtils, this.Mesh] = modules;
+
+        // this.setState({
+          // apiLoaded: true
+        // });
+        
+        if (this.mapView.type === '2d') {
+          // document.getElementById('3dmode').style.display = 'none';
+          this.graphicsLayer = new GraphicsLayer({
+            // id: "oi-graphicsLayer",
+            title: "Oriented Imagery",
+            elevationInfo: { mode: "on-the-ground", offset: 0 }
+          } as any);
+          this.orientedViewer?.setEnvironment("2D"); //#818
+        } else {
+          // document.getElementById('3dmode').style.display = 'inline-block';
+          this.graphicsLayer = new GraphicsLayer({
+            // id: "oi-graphicsLayer",
+            title: "Oriented Imagery",
+            elevationInfo: { mode: "absolute-height", offset: 0 }
+          } as any);
+  
+          //#818
+          this.orientedViewer?.setHeightModelInfo({ "heightModel": this.mapView.heightModelInfo?.heightModel, "heightUnit": this.mapView.heightModelInfo?.heightUnit });  // #670 issue
+          this.orientedViewer?.setEnvironment("3D");
+  
+        }
+  
+        if (!this.mapView.map.findLayerById(this.graphicsLayer.id)) {
+          this.mapView.map.add(this.graphicsLayer);
+        }
+        this.setState({
+          config: {
+          oic: []
+          }
+        });
+        this.oicList = [];
+        this.selectLocationFlag = true;
+        if (this.mapView) {
+          this.mapView.cursor = 'crosshair';   //issue 249
+        }
+        this.loadOrientedImageryApi();
+        
+        this.loadOIC();
+      }
+      
+    // }
+    //#1000
+    
+    // this.mapClickEventHandler = this.mapView.on('click', this.mapClickEvent.bind(this));
+    // this.mapPopupHandler1 = this.mapView.popup.watch("selectedFeature", this.graphicSelected.bind(this));
+    // this.mapPopupHandler2 = this.mapView.popup.watch("visible", (visible) => {
+    //   if (!visible && this.featureSelected) {
+    //     this.orientedViewer.deselectFeaturesInImage(this.featureSelected);
+    //     document.getElementById("viewGraphicBtn").style.display = "none";
+    //   }
+    // });
+    
+  
+
+  
+  componentDidUpdate(prevProps) {
+    //#1000
+
+     if (this.props.state === "CLOSED") return; 
+     else {
+		 //#1040
+    //this.mapClickEventHandler = this.mapView.on('click', this.mapClickEvent.bind(this));
+    //this.mapPopupHandler1 = this.mapView.popup.watch("selectedFeature", this.graphicSelected.bind(this));
+    //this.mapPopupHandler2 = this.mapView.popup.watch("visible", (visible) => {
+      // if (!visible && this.featureSelected) {
+        // this.orientedViewer.deselectFeaturesInImage(this.featureSelected);
+        // document.getElementById("viewGraphicBtn").style.display = "none";
+      // }
+    // });
+    if (this.oicList?.length) this.loadOIC();
+   }
+  }
+
+  componentWillUnmount() { 
+    this.mapClickEventHandler.remove();
+    this.mapPopupHandler1.remove();
+    this.mapPopupHandler2.remove();
+  }
+
+  loadOIC = () => {
+    let oicAddedFlag = false;
+
+    const oic = this.state.selectedOIC ? this.state.selectedOIC : this.props.config.oicList.length > 0 ? this.props.config.oicList[0].url : '';
+    if (oic) {
+      if (!this.oicList.length) {
+        this.oicList = [];
+        for (let i = 0; i < this.props.config.oicList.length; i++) {
+          this.oicList.push(this.props.config.oicList[i].url);
+        }
+      }
+      if (this.oicList.length > 0) {
+        for (let i = 0; i < this.oicList.length; i++) {
+          if (this.oicList[i] === oic) {
+            oicAddedFlag = true;
+
+          } else {
+            this.oicList.push(oic);
+          }
+        }
+      } else {
+        this.oicList.push(oic);
+      }
+
+      
+      
+
     }
-    this.oicList = [];
-    this.selectLocationFlag = true;
-    if (this.mapView) {
-      this.mapView.cursor = 'crosshair';   //issue 249
+    if (window.location.href.indexOf('oic') !== -1) {
+        let v = window.location.href.split('oic=')[1];
+        if (v) {
+          this.oicList[0] = ("https://www.arcgis.com/sharing/rest/content/items/" + v.split("&")[0]);
+        }
+        
+
+    }
+
+    this.addOICItem(this.oicList[0]);
+    if (this.orientedViewer && this.props.config.editingEnabled && this.mapView) {
+      this.addAllVectorLayers();
+    } else if (this.orientedViewer && !this.props.config.editingEnabled && this.mapView) {
+      this.removeVectorLayers();
     }
 
   }
 
-  componentDidUpdate(prevProps: AllWidgetProps<{}>) {
-
-  }
 
   layerModuleSelector = (url) => {
     Layer.fromArcGISServerUrl({
@@ -281,7 +419,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
           this.overviewLayer = null;
         }
         this.overviewLayer = layerObject;
-        this.overviewLayer.minScale = Math.max(50000, 300 * Number(this.config.oic[this.state.selectedOIC].itemUrl.properties.MaxDistance));  //issue 619
+        this.overviewLayer.minScale = Math.max(50000, 300 * Number(this.state.config.oic[this.state.selectedOIC].itemUrl.properties.MaxDistance));  //issue 619
         this.mapView.map.add(this.overviewLayer);
         this.createCoverageArea(this.coverageFlag.allCoverage);
       });
@@ -295,19 +433,19 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
         this.overviewLayer = new WMTSLayer({
           url: url,
           visible: false,
-          minScale: Math.max(50000, 300 * Number(this.config.oic[this.state.selectedOIC].itemUrl.properties.MaxDistance))  //issue 619
+          minScale: Math.max(50000, 300 * Number(this.state.config.oic[this.state.selectedOIC].itemUrl.properties.MaxDistance))  //issue 619
         });
       } else if (url.toLowerCase().indexOf("wms") !== -1) {
         this.overviewLayer = new WMSLayer({
           url: url,
           visible: false,
-          minScale: Math.max(50000, 300 * Number(this.config.oic[this.state.selectedOIC].itemUrl.properties.MaxDistance))  //issue 619
+          minScale: Math.max(50000, 300 * Number(this.state.config.oic[this.state.selectedOIC].itemUrl.properties.MaxDistance))  //issue 619
         });
       } else if (url.toLowerCase().indexOf(".kml") !== -1) {
         this.overviewLayer = new KMLLayer({
           url: url,
           visible: false,
-          minScale: Math.max(50000, 300 * Number(this.config.oic[this.state.selectedOIC].itemUrl.properties.MaxDistance))  //issue 619
+          minScale: Math.max(50000, 300 * Number(this.state.config.oic[this.state.selectedOIC].itemUrl.properties.MaxDistance))  //issue 619
         });
       }
       if (this.overviewLayer) {
@@ -319,11 +457,27 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
 
   loadOrientedImageryApi = () => {
     //oiapi();
-    if (!this.oiApiLoaded) {
+    if (!(window as any).oiApiLoaded) { //#1000
       orientedImagery.on("load", (loaded) => {
         if (loaded) {
-          this.orientedViewer = orientedImagery.viewer("oiviewer");
-          this.oiApiLoaded = true;
+          (window as any).oiApiLoaded = true; //#1000 
+          this.loadOIViewer();
+
+        } else {
+          //this.oiApiLoaded = false;
+          (window as any).oiApiLoaded = false; //#1000 
+        }
+      });
+    } 
+    //#1000
+    else {
+      this.loadOIViewer();
+    }
+  }
+
+  loadOIViewer = () => {
+    this.orientedViewer = orientedImagery.viewer(this.oiviewerRef.current);
+          //this.oiApiLoaded = true;
           if (this.mapView.type === '3d') {
             this.orientedViewer.setHeightModelInfo({ "heightModel": this.mapView.heightModelInfo?.heightModel, "heightUnit": this.mapView.heightModelInfo?.heightUnit });  // #670 issue
             this.orientedViewer.setEnvironment("3D");
@@ -373,13 +527,8 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
           this.orientedViewer.on("updateViewCamera", this.updateViewCamera);
           this.orientedViewer.on("deleteImageInView", this.deleteImageInView);
 
-
-        } else {
-          this.oiApiLoaded = false;
-        }
-      });
-    }
   }
+
 
   addOICItem = (url: string) => {
     //var url = url;
@@ -389,12 +538,12 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
       },
       responseType: "json"
 
-    }).then((oicInfo) => {
+    }).then(async (oicInfo: any) => {
       url = oicInfo.url.substring(0, oicInfo.url.indexOf('/data'));
       oicInfo = oicInfo.data;
 
       if (oicInfo && oicInfo.properties) {
-        this.config.oic[url] = {
+        this.state.config.oic[url] = {
           title: oicInfo.properties.Name,
           serviceUrl: oicInfo.properties.ServiceURL,
           overviewUrl: oicInfo.properties.OverviewURL,
@@ -405,8 +554,31 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
           this.setState({
             selectedOIC: this.oicList[0]
           });
+        }
           if (this.oicList[0]) {
-            var url = this.config.oic[this.oicList[0]].serviceUrl;
+            var url = this.state.config.oic[this.oicList[0]].serviceUrl;
+
+             //#705
+             if (url.includes("item.html?")) {
+              var itemurl = url.split("/home")[0] + "/sharing/rest/content/items/" + (url.split("id=")[1]).split("/")[0];
+              await esriRequest(itemurl, {
+                  query: {
+                      f: "json",
+                  },
+                  responseType: "json"
+              }).then(async (response) => {
+                  url = response.data.url;
+                  await esriRequest(itemurl + "/data", {
+                      query: {
+                          f: "json",
+                      },
+                      responseType: "json"
+                  }).then((resp) => {
+                      url = url + "/" + resp.data.layers[0].id;
+                  });
+
+              });
+          }
             if (url.indexOf("ImageServer") === -1) {
               var query = new Query();
               query.where = "1=1";
@@ -445,9 +617,22 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
               });
             }
 
-            this.layerModuleSelector(this.config.oic[this.oicList[0]].overviewUrl);
+            if (this.state.config.oic[this.oicList[0]].overviewUrl) {
+              this.layerModuleSelector(this.state.config.oic[this.oicList[0]].overviewUrl);
+            } else {  //issue #607
+              if (this.state.config.oic[this.oicList[0]].serviceUrl.indexOf("ImageServer") === -1) {
+                //#705
+                if (this.state.config.oic[this.oicList[0]].serviceUrl.includes("item.html?")) {
+                    this.layerModuleSelector(url); 
+                } else {
+                    this.layerModuleSelector(this.state.config.oic[this.oicList[0]].serviceUrl); 
+                }
+                
+            } 
+            }
+            
           }
-        }
+        
       } else {
         //this.errorNotification("Error! Invalid OIC.");
       }
@@ -560,11 +745,16 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
                   this.selectedExposurePoint = {geometry: response.results[0].graphic.geometry, id: response.results[0].graphic.attributes.imageID};
                   this.searchImages(this.selectedPoint, parseInt(this.selectedExposurePoint.id));  // to streamlime the API searchImages function to use the this.searchImages of the widget
               }
-              //#607 #614
-              else if (response.results[0].graphic.attributes && response.results[0].graphic.attributes.OBJECTID && response.results[0].graphic.layer.url.includes('FeatureServer') && response.results[0].graphic.layer.url === this.config.oic[this.state.selectedOIC].serviceUrl) {
+              //#607 #614 #992
+              else if (response.results[0].graphic.attributes && response.results[0].graphic.attributes.OBJECTID && response.results[0].graphic.layer.url.includes('FeatureServer')) {
+                var layer = response.results[0].graphic.layer.url + "/" + response.results[0].graphic.layer.layerId;
+                if (layer === this.state.config.oic[this.state.selectedOIC].serviceUrl) {
                   this.showImage(evt.mapPoint, response.results[0].graphic.attributes.OBJECTID);
-
-
+                }
+                else {
+                  this.selectedPoint = evt.mapPoint;
+                  this.searchImages(evt.mapPoint, null);
+               }
               } else {
                   this.selectedPoint = evt.mapPoint;
                   this.searchImages(evt.mapPoint, null);
@@ -623,8 +813,8 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
   }
 
   searchImages = (point, objectId) => {
-    let url = this.config.oic[this.state.selectedOIC]?.itemUrl;
-    if (this.oiApiLoaded && url) {
+    let url = this.state.config.oic[this.state.selectedOIC]?.itemUrl;
+    if ((window as any).oiApiLoaded && url) { //#1000
       if (this.mapView.type === '2d') {
         point.z = 0;
         this.orientedViewer.searchImages(point.toJSON(), url, { maxDistance: 1000, extent: this.mapView.extent.toJSON(), objectId: objectId || null });
@@ -639,7 +829,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
             //this.showLoading();
             //html.set("notifyUser", "Please wait. Searching for image.");
             //document.getElementById('notifyUser').innerHTML = 'Please wait. Searching for image.';
-            var location = this.currentImageCameraLocation ? this.currentImageCameraLocation.clone() : this.mapView.camera.position.clone();
+            var location = this.mapView.camera.position.clone(); //#980
             // this.mapView.map.ground.queryElevation(location).then((result) => {
             //   location.z -= result.geometry.z;
               this.orientedViewer.searchImages(pointJSON, url, {
@@ -667,8 +857,8 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
   }
 
   showImage = (point, objectId) => {
-    let url = this.config.oic[this.state.selectedOIC]?.itemUrl;
-    if (this.oiApiLoaded && url) {
+    let url = this.state.config.oic[this.state.selectedOIC]?.itemUrl;
+    if ((window as any).oiApiLoaded && url) { //#1000
       if (this.mapView.type === '2d') {
         point.z = 0;
         this.orientedViewer.showImage(point.toJSON(), url, { maxDistance: 1000, extent: this.mapView.extent.toJSON(), objectId: objectId || null });
@@ -683,7 +873,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
             //this.showLoading();
             //html.set("notifyUser", "Please wait. Searching for image.");
             //document.getElementById('notifyUser').innerHTML = 'Please wait. Searching for image.';
-            var location = this.currentImageCameraLocation ? this.currentImageCameraLocation.clone() : this.mapView.camera.position.clone();
+            var location = this.mapView.camera.position.clone(); //#980
             // this.mapView.map.ground.queryElevation(location).then((result) => {
             //   location.z -= result.geometry.z;
               this.orientedViewer.showImage(pointJSON, url, {
@@ -850,7 +1040,11 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
   updateGraphics = (image) => {
     this.imageProperties = image;
     if (this.mapView.type === '3d') {
+      setTimeout(() => {
+
+      
       this.setCameraView(this.imageProperties);
+      }, 2000);
       for (let v = this.graphicsLayer.graphics.length - 1; v >= 0; v--) {
         if (this.graphicsLayer.graphics.getItemAt(v).attributes && this.graphicsLayer.graphics.getItemAt(v).attributes.id === "oi-polygons" && this.graphicsLayer.graphics.getItemAt(v).attributes.imageID === image.imageID) {
           var graphic = this.graphicsLayer.graphics.getItemAt(v).clone();
@@ -858,6 +1052,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
           graphic.visible = this.coverageFlag.currentCoverage;
           this.graphicsLayer.remove(this.graphicsLayer.graphics.getItemAt(v));
           this.graphicsLayer.add(graphic);
+
         } else if (this.graphicsLayer.graphics.getItemAt(v).attributes && this.graphicsLayer.graphics.getItemAt(v).attributes.id === "oi-polygons" && this.graphicsLayer.graphics.getItemAt(v).attributes.imageID === this.activeImageID) {
           var graphic = this.graphicsLayer.graphics.getItemAt(v).clone();
           graphic.symbol = this.frustumSymbol;
@@ -865,12 +1060,14 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
           graphic.visible = this.coverageFlag.similarCoverage;
           this.graphicsLayer.remove(this.graphicsLayer.graphics.getItemAt(v));
           this.graphicsLayer.add(graphic);
+
         } else if (this.graphicsLayer.graphics.getItemAt(v).symbol.style === "circle" && this.graphicsLayer.graphics.getItemAt(v).attributes.imageID === image.imageID) {
           var graphic = this.graphicsLayer.graphics.getItemAt(v).clone();
           var currentGeometry = graphic.geometry.clone() as any;
           graphic.symbol = this.activeSourcePointSymbol;
           this.graphicsLayer.remove(this.graphicsLayer.graphics.getItemAt(v));
           this.graphicsLayer.add(graphic);
+
         } else if (this.graphicsLayer.graphics.getItemAt(v).symbol.style === "circle" && this.graphicsLayer.graphics.getItemAt(v).attributes.imageID === this.activeImageID) {
           var graphic = this.graphicsLayer.graphics.getItemAt(v).clone();
           graphic.symbol = this.sourcePointSymbol;
@@ -928,20 +1125,22 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
         this.overviewLayer.visible = true;
       else
         this.overviewLayer.visible = false;
-    } else {
+    } 
+    //#935
+    if (!this.state.config.oic[this.state.selectedOIC].itemUrl.properties.OverviewURL) {
       for (var s = 0; s <= this.graphicsLayer.graphics.length - 1; s++) {
         if (this.graphicsLayer.graphics.getItemAt(s).symbol && this.graphicsLayer.graphics.getItemAt(s).symbol.style === "solid" && this.graphicsLayer.graphics.getItemAt(s).attributes.coverageMap) {
           this.graphicsLayer.remove(this.graphicsLayer.graphics.getItemAt(s));
           break;
         }
       }
-      if (value && this.oiApiLoaded) {
-        this.orientedViewer.getCoverageMap(this.mapView.extent.toJSON(), this.config.oic[this.state.selectedOIC].itemUrl).then((response) => {
+      if (value && (window as any).oiApiLoaded) { //#1000
+        this.orientedViewer.getCoverageMap(this.mapView.extent.toJSON(), this.state.config.oic[this.state.selectedOIC].itemUrl).then((response) => {
           if (response.coverageMap) {
             if (this.mapView.type === '2d') {
               var graphic = new Graphic({ geometry: new Polygon(response.coverageMap), symbol: this.coverageMapSymbol, attributes: { "coverageMap": true } });
               this.graphicsLayer.add(graphic);
-              this.overviewLayer = graphic;
+              //this.overviewLayer = graphic;
             } else {
               var multiPoint = new Multipoint({ spatialReference: this.mapView.spatialReference, points: this.createMultiPoint({ type: "polygon", geometries: [response.coverageMap] }) });
               this.queryElevation(multiPoint).then((result) => {
@@ -954,7 +1153,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
 
                 var graphic = new Graphic({ geometry: new Polygon(response.coverageMap), symbol: this.coverageMapSymbol, attributes: { "coverageMap": true } });
                 this.graphicsLayer.add(graphic);
-                this.overviewLayer = graphic;
+                //this.overviewLayer = graphic;
               });
             }
           }
@@ -1041,7 +1240,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
   }
 
   groundToImage = (point) => {
-    if (this.oiApiLoaded) {
+    if ((window as any).oiApiLoaded) { //#1000
       if (this.mapView.type === '2d') {
         point.z = 0;
         this.orientedViewer.displayGroundPointInImage(point.toJSON());
@@ -1057,17 +1256,17 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
   }
 
 
-  toggleIcon = () => {
+  toggleIcon = (i) => {
     //issue 252 and 249
 
-    if (document.getElementsByClassName("oi-widget-selectBtn")[0].classList.contains("oi-widget-selectBtnSelected")) {
-      document.getElementsByClassName("oi-widget-selectBtn")[0].classList.remove("oi-widget-selectBtnSelected");
-      document.getElementsByClassName("oi-widget-selectBtn")[0].title = "Turn on to pick a focus point in scene to view image";
+    if (document.getElementsByClassName("oi-widget-selectBtn")[i].classList.contains("oi-widget-selectBtnSelected")) {
+      document.getElementsByClassName("oi-widget-selectBtn")[i].classList.remove("oi-widget-selectBtnSelected");
+      document.getElementsByClassName("oi-widget-selectBtn")[i].title = "Turn on to pick a focus point in scene to view image";
       this.selectLocationFlag = false;
       this.mapView.cursor = "default";
   } else {
-    document.getElementsByClassName("oi-widget-selectBtn")[0].classList.add("oi-widget-selectBtnSelected");
-    document.getElementsByClassName("oi-widget-selectBtn")[0].title = "Turn off to select features in scene";
+    document.getElementsByClassName("oi-widget-selectBtn")[i].classList.add("oi-widget-selectBtnSelected");
+    document.getElementsByClassName("oi-widget-selectBtn")[i].title = "Turn off to select features in scene";
       this.selectLocationFlag = true;
       this.mapView.cursor = "crosshair";
   }
@@ -1133,13 +1332,14 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
 
 
     for (let i = 0; i < this.vectorLayers.length; i++) {
-      var vectorLayerProp = this.vectorLayers[i];
-      var renderer = vectorLayerProp.renderer.toJSON();
+      let vectorLayerProp = this.vectorLayers[i];
+      let renderer = vectorLayerProp.renderer.toJSON();
+      let symbol: any;
       switch (vectorLayerProp.geometryType) {
         case 'polygon':
           {
             if (renderer.type === "simple") {
-              var symbol = {
+              symbol = {
                 "type": "polygon",
                 "color": vectorLayerProp.renderer.symbol.color ? [vectorLayerProp.renderer.symbol.color.r, vectorLayerProp.renderer.symbol.color.g, vectorLayerProp.renderer.symbol.color.b, vectorLayerProp.renderer.symbol.color.a] : [0, 0, 0, 0],
                 "outline": {
@@ -1149,8 +1349,8 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
               };
               renderer.symbol = symbol;
             } else if (renderer.type === "uniqueValue") {
-              for (var b in vectorLayerProp.renderer.uniqueValueInfos) {
-                var symbol = {
+              for (let b in vectorLayerProp.renderer.uniqueValueInfos) {
+                symbol = {
                   "type": "polygon",
                   "color": vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color ? [vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color.r, vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color.g, vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color.b, vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color.a] : [0, 0, 0, 0],
                   "outline": {
@@ -1167,15 +1367,15 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
         case 'polyline':
           {
             if (renderer.type === "simple") {
-              var symbol = {
+              symbol = {
                 "type": "polyline",
                 "color": vectorLayerProp.renderer.symbol.color ? [vectorLayerProp.renderer.symbol.color.r, vectorLayerProp.renderer.symbol.color.g, vectorLayerProp.renderer.symbol.color.b, vectorLayerProp.renderer.symbol.color.a] : [76, 230, 0, 255],
                 "width": vectorLayerProp.renderer.symbol.width || 2
               };
               renderer.symbol = symbol;
             } else if (renderer.type === "uniqueValue") {
-              for (var b in vectorLayerProp.renderer.uniqueValueInfos) {
-                var symbol = {
+              for (let b in vectorLayerProp.renderer.uniqueValueInfos) {
+                symbol = {
                   "type": "polyline",
                   "color": vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color ? [vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color.r, vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color.g, vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color.b, vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color.a] : [76, 230, 0, 255],
                   "width": vectorLayerProp.renderer.uniqueValueInfos[b].symbol.width || 2
@@ -1189,7 +1389,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
         case 'point':
           {
             if (renderer.type === "simple") {
-              var symbol = {
+              symbol = {
                 "type": "point",
                 "style": vectorLayerProp.renderer.symbol.style || "circle",
                 "color": vectorLayerProp.renderer.symbol.color ? [vectorLayerProp.renderer.symbol.color.r, vectorLayerProp.renderer.symbol.color.g, vectorLayerProp.renderer.symbol.color.b, vectorLayerProp.renderer.symbol.color.a] : [255, 127, 127, 255],
@@ -1201,8 +1401,8 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
               };
               renderer.symbol = symbol;
             } else if (renderer.type === "uniqueValue") {
-              for (var b in vectorLayerProp.renderer.uniqueValueInfos) {
-                var symbol = {
+              for (let b in vectorLayerProp.renderer.uniqueValueInfos) {
+                symbol = {
                   "type": "point",
                   "style": vectorLayerProp.renderer.uniqueValueInfos[b].symbol.style || "circle",
                   "color": vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color ? [vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color.r, vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color.g, vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color.b, vectorLayerProp.renderer.uniqueValueInfos[b].symbol.color.a] : [255, 127, 127, 255],
@@ -1397,7 +1597,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
         if (featureForm)
           featureForm.submit();
       });
-      featureForm.container.appendChild(upbutton);
+      (featureForm.container as any).appendChild(upbutton);
       var dlbutton = document.createElement('button');
       dlbutton.setAttribute('class', 'oi-btn-css oi-btn-css-clear');
       dlbutton.style.marginLeft = '10px';
@@ -1412,7 +1612,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
 
         });
       });
-      featureForm.container.appendChild(dlbutton);
+      (featureForm.container as any).appendChild(dlbutton);
 
       featureForm.on("submit", () => {
         var updated = featureForm.getValues();
@@ -1457,7 +1657,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
           for (var a in this.vectorLayers) {
             if (this.vectorLayers[a].indexOf(graphic.layer.url) !== -1) {
               if (graphic.attributes.hasOwnProperty("ImgUrn")) {
-                this.findImageInCatalog(graphic.attributes.ImgUrn, graphic, this.config.oic[this.state.selectedOIC].serviceUrl, temp);
+                this.findImageInCatalog(graphic.attributes.ImgUrn, graphic, this.state.config.oic[this.state.selectedOIC].serviceUrl, temp);
               } else {
                 var objectId = graphic.attributes[graphic.layer.objectIdField];
                 var query = new Query();
@@ -1466,7 +1666,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
                 query.returnGeometry = false;
                 graphic.layer.queryFeatures(query).then((response) => {
                   if (response.features.length) {
-                    this.findImageInCatalog(response.features[0].attributes.ImgUrn, graphic, this.config.oic[this.state.selectedOIC].serviceUrl, temp);
+                    this.findImageInCatalog(response.features[0].attributes.ImgUrn, graphic, this.state.config.oic[this.state.selectedOIC].serviceUrl, temp);
                   }
                 });
               }
@@ -1490,7 +1690,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
         properties: {
           visible: false
         }
-      }).then((layerObject) => {
+      }).then((layerObject: any) => {
         layerObject.load().then((loaded) => {
           var fields = layerObject.fields;
           for (var a in fields) {
@@ -1541,8 +1741,8 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
   }
 
   openImageInViewer = () => {
-    if (this.selectedGraphicProperties && this.oiApiLoaded) {
-      var url = this.config.oic[this.state.selectedOIC].itemUrl;
+    if (this.selectedGraphicProperties && (window as any).oiApiLoaded) { //#1000
+      var url = this.state.config.oic[this.state.selectedOIC].itemUrl;
       if (this.selectedGraphicProperties.geometry.type === "point")
         var point = this.selectedGraphicProperties.geometry;
       else if (this.selectedGraphicProperties.geometry.type === "polygon")
@@ -1621,9 +1821,9 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
           this.currentImageCameraLocation = result.geometry.clone();  
           var camera = this.mapView.camera.clone();
           camera.fov = cam.fov;
-          camera.heading = cam.heading; //camheading error fix
-          this.mapView.camera = camera;
-          this.mapView.goTo(cam).then(() => {
+          //camera.heading = cam.heading; //camheading error fix //#969
+          this.mapView.camera = camera; 
+          this.mapView.goTo(cam,{easing:"linear"}).then(() => { //#969
             resolve();
           });
         });
@@ -1803,9 +2003,9 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
             });
             var camera = this.mapView.camera.clone();
             camera.fov = cam.fov;
-            camera.heading = cam.heading; //camheading error fix
-            this.mapView.camera = camera;
-            this.mapView.goTo(cam).then(() => {
+            //camera.heading = cam.heading; //camheading error fix //#969
+            this.mapView.camera = camera; 
+            this.mapView.goTo(cam,{easing:"linear"}).then(() => { //#969
               this.changeLayersVisibility(false);
               this.graphicsLayer.add(graphic);
 
@@ -1820,9 +2020,9 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
           });
           var camera = this.mapView.camera.clone();
           camera.fov = cam.fov;
-          camera.heading = cam.heading;
-          this.mapView.camera = camera;
-          this.mapView.goTo(cam).then(() => {
+          //camera.heading = cam.heading;//#969
+          this.mapView.camera = camera
+          this.mapView.goTo(cam,{easing:"linear"}).then(() => { //#969
             this.changeLayersVisibility(false);
             this.graphicsLayer.add(graphic);
 
@@ -1909,7 +2109,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
   }
 
   disableZoom = () => {
-    var zoomNode = document.getElementsByClassName("esri-component esri-zoom esri-widget");
+    var zoomNode: any = document.getElementsByClassName("esri-component esri-zoom esri-widget");
     if (zoomNode.length) {
       zoomNode[0].style.display = "none";
     }
@@ -1963,7 +2163,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
   }
 
   enableZoom = () => {
-    let zoomNode = document.getElementsByClassName("esri-component esri-zoom esri-widget");
+    let zoomNode: any = document.getElementsByClassName("esri-component esri-zoom esri-widget");
     if (zoomNode.length) {
       zoomNode[0].style.display = "block";
     }
@@ -1990,8 +2190,8 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
 
   setupResizeHandle = (width, height) => {
     if (height && width) { //#840
-      document.getElementById('oiviewer').style.height = '100%';
-      document.getElementById('oiviewer').style.width = '100%';
+      this.oiviewerRef.current.style.height = '100%';
+      this.oiviewerRef.current.style.width = '100%';
 
       this.orientedViewer?.resize();
     }
@@ -2000,69 +2200,28 @@ export default class Widget extends BaseWidget<AllWidgetProps<{}>, State>{
 
   render() {
 
-    if (!this.isConfigured()) {
-      return 'Please choose map';
-    }
+     if (!this.isConfigured()) {
+       return 'Please choose map';
+     }
 
     // for (let i = 0; i < document.getElementsByClassName('border bg-white shadow rounded').length; i++) {
     //   document.getElementsByClassName('border bg-white shadow rounded')[i].style = { width: '450px', height: 'fit-content' };
     // }
-    let oicAddedFlag = false;
-    const oic = this.state.selectedOIC ? this.state.selectedOIC : this.props.config.oicList.length > 0 ? this.props.config.oicList[0].url : '';
-    if (oic) {
-      if (!this.oicList) {
-        this.oicList = [];
-        for (let i = 0; i < this.props.config.oicList.length; i++) {
-          this.oicList.push(this.props.config.oicList[i].url);
-        }
-      }
-      if (this.oicList.length > 0) {
-        for (let i = 0; i < this.oicList.length; i++) {
-          if (this.oicList[i] === oic) {
-            oicAddedFlag = true;
+    
 
-          } else {
-            this.oicList.push(oic);
-          }
-        }
-      } else {
-        this.oicList.push(oic);
-      }
+    return <div ref={this.oiviewerRef} className="widget-orientedimagery jimu-widget" style={{ width: '100%', height: '100%', overflow: 'auto' }}>
 
-      if (window.location.href.indexOf('oic') !== -1) {
-        let v = window.location.href.split('oic=')[1];
-        if (v) {
-          this.oicList[0] = ("https://www.arcgis.com/sharing/rest/content/items/" + v.split("&")[0]);
-        }
-
-      }
-      for (let i = 0; i < this.oicList.length; i++) {
-        this.addOICItem(this.oicList[i]);
-      }
-
-    }
-    if (this.orientedViewer && this.props.config.editingEnabled && this.mapView) {
-      this.addAllVectorLayers();
-    } else if (this.orientedViewer && !this.props.config.editingEnabled && this.mapView) {
-      this.removeVectorLayers();
-    }
-
-    return <div id="oiviewer" className="widget-orientedimagery" style={{ width: '100%', height: '100%', overflow: 'auto' }}>
-
-      <JimuMapViewComponent useMapWidgetIds={this.props.useMapWidgetIds} onActiveViewChange={this.onActiveViewChange}></JimuMapViewComponent>
+      <JimuMapViewComponent useMapWidgetId={this.props.useMapWidgetIds?.[0]} onActiveViewChange={this.onActiveViewChange}></JimuMapViewComponent>
 
       <div>
 
       </div>
       <button className='oi-btn-css oi-btn-css-transparent' style={{ display: 'none', marginTop: '5px' }} id='viewGraphicBtn'>{this.nls('viewImage')}</button>
 
-      <div id="3DModePane" style={{ display: 'none' }}>
-       
-        <div id="notifyUser" style={{ display: 'block', color: 'red' }}></div>
-      </div>
-
 
       <ReactResizeDetector handleWidth handleHeight onResize={this.setupResizeHandle}></ReactResizeDetector>
     </div>
+  
+	
   }
 }
