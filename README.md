@@ -19,7 +19,7 @@ To view OICs in ArcGIS Pro, download the [Oriented Imagery add-in for ArcGIS Pro
 
 * What’s new in Oriented Imagery API:
    - Use of item popup in image attribute viewer
-   - Tiff / COGG file support.
+   - Tiff / COG file support.
    - Use of feature service item URL in OIC.
    - Support to access OICs from IWA enabled portals.
    - 360 degree video bug fix.
