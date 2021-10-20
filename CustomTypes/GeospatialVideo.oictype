@@ -15,7 +15,7 @@
 			"FarDist": "",
 			"NearDist": "",
 			"OIType": "V",
-			"MaxDist": "300"
+			"MaxDist": "1000"
 		}	
 	}
 }
