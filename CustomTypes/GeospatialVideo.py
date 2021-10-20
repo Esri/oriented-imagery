@@ -14,9 +14,9 @@
 # ------------------------------------------------------------------------------
 # Name: GeoSpatial Video
 # Description: This is an custom OIC type.
-# Version: 2.3
-# Date Created : 20181104
-# Date updated : 20190523
+# Version: 1.4
+# Date Created : 20201209
+# Date updated : 20211012
 # Requirements: ArcGIS Pro 2.2
 # Author: Esri Imagery Workflows team
 # ------------------------------------------------------------------------------
@@ -176,18 +176,18 @@ def processInput(oicPath, oicParas, inputParams, defValues, log=None):
                 arcpy.AddMessage("Could Not find PlatformRoll Field")
                 return False
 
-            sensorElipsHtFIndex = returnFieldIndex(inFieldList,'SensorEllipsoidHeight')
-            isOrthoHeight = False
+            sensorElipsHtFIndex = returnFieldIndex(inFieldList,'SensorAltitude')
+            isOrthoHeight = True
             if sensorElipsHtFIndex == -1:
-                sensorElipsHtFIndex = returnFieldIndex(inFieldList,'SensorAltitude')
+                sensorElipsHtFIndex = returnFieldIndex(inFieldList,'SensorEllipsoidHeight')
                 if sensorElipsHtFIndex == -1:
                     log.Message("Could Not find SensorEllipsoidHeight or SensorAltitude Field", log.const_critical_text)
                     arcpy.AddMessage("Could Not find SensorEllipsoidHeight or SensorAltitude Field")
                     return False
                 else:
-                    isOrthoHeight = True
+                    isOrthoHeight = False
             else:
-                isOrthoHeight = False
+                isOrthoHeight = True
 
             sensorRelAzimuthFIndex = returnFieldIndex(inFieldList,'SensorRelativeAzimuth')
             if sensorRelAzimuthFIndex == -1:
@@ -195,7 +195,7 @@ def processInput(oicPath, oicParas, inputParams, defValues, log=None):
                 if sensorRelAzimuthFIndex == -1:
                     log.Message("Could Not find SensorRelativeAzimuth Field", log.const_critical_text)
                     arcpy.AddMessage("Could Not find SensorRelativeAzimuth Field")
-                    return False
+                    #return False
 
             sensorRelElevFIndex = returnFieldIndex(inFieldList,'SensorRelativeElevation')
             if sensorRelElevFIndex == -1:
@@ -203,7 +203,7 @@ def processInput(oicPath, oicParas, inputParams, defValues, log=None):
                 if sensorRelElevFIndex == -1:
                     log.Message("Could Not find SensorRelativeElevation or Sensor Relative Elevation Angle Field", log.const_critical_text)
                     arcpy.AddMessage("Could Not find SensorRelativeElevation or Sensor Relative Elevation Angle Field")
-                    return False
+                    #return False
 
             sensorRelRollFIndex = returnFieldIndex(inFieldList,'SensorRelativeRoll')
             if sensorRelRollFIndex == -1:
@@ -211,7 +211,7 @@ def processInput(oicPath, oicParas, inputParams, defValues, log=None):
                 if sensorRelRollFIndex == -1:
                     log.Message("Could Not find SensorRelativeRoll or Sensor Relative Roll Angle Field", log.const_critical_text)
                     arcpy.AddMessage("Could Not find SensorRelativeRoll or Sensor Relative Roll Angle Field")
-                    return False
+                    #return False
 
             HFOVFIndex = returnFieldIndex(inFieldList,'HorizontalFOV')
             if HFOVFIndex == -1:
@@ -225,12 +225,9 @@ def processInput(oicPath, oicParas, inputParams, defValues, log=None):
                 arcpy.AddMessage("Could Not find VerticalFOV Field")
                 return False
 
-            aToken = returnArcGISToken()
-            if (aToken == None):
-                arcpy.AddMessage("Not signed in. User needs to be signed in to access elevation data.")
-                return
+            #aToken = returnArcGISToken()
 
-            elevPointsResult = returnElevationPoints(inputCSVFile,isOrthoHeight,aToken)
+            elevPointsResult = returnElevationPoints(inputCSVFile,isOrthoHeight)
 
             DEMInterval = elevPointsResult[0]
             elevPoints = elevPointsResult[1]
@@ -245,7 +242,7 @@ def processInput(oicPath, oicParas, inputParams, defValues, log=None):
             offSetFromStart = -1
 
             DEMIntReset = 0
-            DEMIntResetCount = 1
+            DEMIntResetCount = 0
             callInter = True
             interpolatedDiff = None
 
@@ -256,145 +253,174 @@ def processInput(oicPath, oicParas, inputParams, defValues, log=None):
             arcpy.AddMessage('Reading Records...')
             for inRow in inTable:
 
+                #arcpy.AddMessage('DEMIntResetCount: {} , elevPoints: {}'.format(str(DEMIntResetCount),str(len(elevPoints))))
+                #arcpy.AddMessage("1")
 
-                if inRow != None:
+                if DEMIntResetCount == (len(elevPoints)-1):
+                    startElev = elevPoints[DEMIntResetCount-1]
+                    endElev = elevPoints[DEMIntResetCount]
+                else:
+                    startElev = elevPoints[DEMIntResetCount]
+                    endElev = elevPoints[DEMIntResetCount+1]
 
-                    # fix for issue #45
-                    if DEMIntResetCount < len(elevPoints):
-                        arcpy.AddMessage("ElevCount:"+str(DEMIntResetCount))
-                        startElev = elevPoints[DEMIntResetCount-1]
-                        endElev = elevPoints[DEMIntResetCount]
 
-                    if callInter:
-                        interpolatedDiff = returnInterpolated(startElev,endElev,DEMInterval)
-                        callInter = False
-                        elevVal = startElev
-                    else:
-                        elevVal = elevVal + interpolatedDiff
+                if callInter:
+                    interpolatedDiff = returnInterpolated(startElev,endElev,DEMInterval)
+                    callInter = False
+                    elevVal = startElev
+                else:
+                    elevVal = elevVal + interpolatedDiff
 
-                    inY = float(inRow[yFieldIndex])
-                    inX = float(inRow[xFieldIndex])
+                inY = float(inRow[yFieldIndex])
+                inX = float(inRow[xFieldIndex])
 
-                    if timeStampIndex > -1:
-                        acqDateStr = inRow[timeStampIndex]
-                        acqDate = returnDate(acqDateStr)
+                if timeStampIndex > -1:
+                    acqDateStr = inRow[timeStampIndex]
+                    acqDate = returnDate(acqDateStr)
 
-                    platHeading = float(inRow[platHeadingFIndex])
+                platHeading = float(inRow[platHeadingFIndex])
+                if sensorRelAzimuthFIndex == -1:
+                    sensorAzimuth = 0
+                else:
                     sensorAzimuth = float(inRow[sensorRelAzimuthFIndex])
-                    camHeading = platHeading + sensorAzimuth
-                    if(camHeading < 0):
-                        camHeading += 360
-                    elif(camHeading > 360):
-                        camHeading -= 360
 
-                    platPitch = float(inRow[platPitchFIndex])
+                camHeading = platHeading + sensorAzimuth
+                if(camHeading < 0):
+                    camHeading += 360
+                elif(camHeading > 360):
+                    camHeading -= 360
+
+                platPitch = float(inRow[platPitchFIndex])
+                if sensorRelElevFIndex == -1:
+                    sensorRelElevAng = 0
+                else:
                     sensorRelElevAng = float(inRow[sensorRelElevFIndex])
-                    camPitch = platPitch + sensorRelElevAng + 90
 
-                    platRoll = float(inRow[platRollFIndex])
+                camPitch = platPitch + sensorRelElevAng + 90
+
+                platRoll = float(inRow[platRollFIndex])
+                if sensorRelRollFIndex == -1:
+                    sensorRollAng = 0
+                else:
                     sensorRollAng = float(inRow[sensorRelRollFIndex])
-                    camRoll =  platRoll + sensorRollAng
+                camRoll =  platRoll + sensorRollAng
 
-                    HFOV = int(inRow[HFOVFIndex])
-                    VFOV = int(inRow[VFOVFIndex])
+                HFOV = int(inRow[HFOVFIndex])
+                VFOV = int(inRow[VFOVFIndex])
 
-                    sensorElev = float(inRow[sensorElipsHtFIndex])
+                sensorElev = float(inRow[sensorElipsHtFIndex])
 
-                    recCounter = recCounter+1
+                recCounter = recCounter+1
 
-                    if keyFrame > 0:
-                        unixTimeStamp = int(inRow[unixTimeStampFIndex])
-                        if recCounter == 0:
-                            firstTimeStamp = int(inRow[unixTimeStampFIndex])
-                            offSetFromStart = 0
-                            lastKeyFrameAdded = 0
-                            addRec = True
-                        else:
-                            offSetFromStart = round((unixTimeStamp - firstTimeStamp) / 1000000)
-
-                            recCounter = recCounter+1
-
-                            if offSetFromStart % keyFrame == 0:
-                                if offSetFromStart == lastKeyFrameAdded:
-                                    addRec = False
-                                else:
-                                    addRec = True
-                                    lastKeyFrameAdded = offSetFromStart
-                                    #arcpy.AddMessage('Last Key Frame:{} '.format(str(lastKeyFrameAdded)))
-                            else:
-                                addRec = False
-
-                    else:
+                if keyFrame > 0:
+                    unixTimeStamp = int(inRow[unixTimeStampFIndex])
+                    if recCounter == 0:
+                        firstTimeStamp = int(inRow[unixTimeStampFIndex])
+                        offSetFromStart = 0
+                        lastKeyFrameAdded = 0
                         addRec = True
-                        recCounter = recCounter+1
-                        unixTimeStamp = int(inRow[unixTimeStampFIndex])
-
-                        if recCounter == 0:
-                            firstTimeStamp = int(inRow[unixTimeStampFIndex])
-
+                    else:
                         offSetFromStart = round((unixTimeStamp - firstTimeStamp) / 1000000)
 
-                    if addRec:
-                        inputRowAttribs = []
+                        recCounter = recCounter+1
 
-                        aPoint = arcpy.Point()
-                        aPoint.X = inX
-                        aPoint.Y = inY
-
-                        #if DEMIntReset == 0:
-                        #    elevVal = returnElevation(isOrthoHeight,inX,inY,4326,aToken)
-
-                        if elevVal != None:
-                            avgHtAG = sensorElev - float(elevVal)
-                        else:
-                            avgHtAG = sensorElev
-
-                        aPtGeometry = arcpy.PointGeometry(aPoint,inPtSRS).projectAs(fcSRS)
-                        inPoint = aPtGeometry.centroid
-
-                        nearDist = avgHtAG * math.tan(( camPitch - (VFOV/2))* math.pi/180)
-                        farDist = avgHtAG * math.tan(( camPitch + (VFOV/2))*math.pi/180)
-
-                        inputRowAttribs.append(inPoint)
-
-                        inName = os.path.basename(inputVideoFile).split('.')[0]
-                        inputRowAttribs.append(inName+'_'+str(int(offSetFromStart)))
-                        inputRowAttribs.append(inputVideoFile)
-                        inputRowAttribs.append(camHeading)
-                        inputRowAttribs.append(camPitch)
-                        inputRowAttribs.append(camRoll)
-                        inputRowAttribs.append(HFOV)
-                        inputRowAttribs.append(VFOV)
-                        inputRowAttribs.append(avgHtAG)
-                        inputRowAttribs.append(farDist)
-                        inputRowAttribs.append(nearDist)
-
-                        inputRowAttribs.append(offSetFromStart)
-                        if timeStampIndex > -1:
-                            if acqDate != None:
-                                inputRowAttribs.append(acqDate)
+                        if offSetFromStart % keyFrame == 0:
+                            if offSetFromStart == lastKeyFrameAdded:
+                                addRec = False
                             else:
-                                inputRowAttribs.append('')
+                                addRec = True
+                                lastKeyFrameAdded = offSetFromStart
+                                #arcpy.AddMessage('Last Key Frame:{} '.format(str(lastKeyFrameAdded)))
+                        else:
+                            addRec = False
+
+                else:
+                    addRec = True
+                    recCounter = recCounter+1
+                    unixTimeStamp = int(inRow[unixTimeStampFIndex])
+
+                    if recCounter == 0:
+                        firstTimeStamp = int(inRow[unixTimeStampFIndex])
+
+                    offSetFromStart = round((unixTimeStamp - firstTimeStamp) / 1000000)
+
+                if addRec:
+                    inputRowAttribs = []
+
+                    aPoint = arcpy.Point()
+                    aPoint.X = inX
+                    aPoint.Y = inY
+
+                    #if DEMIntReset == 0:
+                    #    elevVal = returnElevation(isOrthoHeight,inX,inY,4326,aToken)
+
+                    if elevVal != None:
+                        avgHtAG = sensorElev - float(elevVal)
+                    else:
+                        avgHtAG = sensorElev
+
+                    aPtGeometry = arcpy.PointGeometry(aPoint,inPtSRS).projectAs(fcSRS)
+                    inPoint = aPtGeometry.centroid
+
+##                    if (camPitch - (VFOV/2) <=0 ) :
+##                        nearDist = 0
+##                    else:
+##                        nearDist = avgHtAG / math.cos( (camPitch - (VFOV/2)) * math.pi/180)
+##
+##                    if (camPitch + (VFOV/2) >=90) :
+##                        farDist = defValues['FarDist']
+##                    else:
+##                        farDist = avgHtAG / math.cos((camPitch + (VFOV/2)) * math.pi/180)
+
+##                    nearDist = abs(avgHtAG * math.tan(( camPitch - (VFOV/2))* math.pi/180))
+##                    farDist = abs(avgHtAG * math.tan(( camPitch + (VFOV/2))*math.pi/180))
+
+                    nearDist = avgHtAG / math.cos( (camPitch - (VFOV/2)) * math.pi/180)
+                    farDist = avgHtAG / math.cos((camPitch + (VFOV/2)) * math.pi/180)
+
+                    inputRowAttribs.append(inPoint)
+
+                    inName = os.path.basename(inputVideoFile).split('.')[0]
+                    inputRowAttribs.append(inName+'_'+str(int(offSetFromStart)))
+                    inputRowAttribs.append(inputVideoFile)
+                    inputRowAttribs.append(camHeading)
+                    inputRowAttribs.append(camPitch)
+                    inputRowAttribs.append(camRoll)
+                    inputRowAttribs.append(HFOV)
+                    inputRowAttribs.append(VFOV)
+                    inputRowAttribs.append(avgHtAG)
+                    inputRowAttribs.append(farDist)
+                    inputRowAttribs.append(nearDist)
+
+                    inputRowAttribs.append(offSetFromStart)
+                    if timeStampIndex > -1:
+                        if acqDate != None:
+                            inputRowAttribs.append(acqDate)
+                        else:
+                            inputRowAttribs.append('')
 
 
-                        outTable.insertRow(inputRowAttribs)
+                    outTable.insertRow(inputRowAttribs)
 
-                    DEMIntReset = DEMIntReset+1
-                    if DEMIntReset == round(DEMInterval):
-                        DEMIntReset = 0
-                        DEMIntResetCount = DEMIntResetCount + 1
-                        callInter = True
+                DEMIntReset = DEMIntReset+1
+                if DEMIntReset == round(DEMInterval):
+                    DEMIntReset = 0
+                    DEMIntResetCount = DEMIntResetCount + 1
+                    if DEMIntResetCount >= len(elevPoints):
+                        DEMIntResetCount = len(elevPoints) -1
+
+                    callInter = True
 
         oicFilePath = getOicFilePath(oicPath)
         updateVideoPrefix(oicFilePath,inputVideoFile)
-        return (True)
-
+        return True
     except Exception as e:
         if log:
             log.Message("Error in processing images. {}".format(
                 str(e)), log.const_critical_text)
         arcpy.AddMessage("Error in processing images. {}".format(str(e)))
-        return ("Error in processing images." + str(e))
+        #return ("Error in processing images." + str(e))
+        return False
 
 def updateVideoPrefix(oicpath,videoprefix):
 
@@ -435,13 +461,17 @@ def returnDate(dateTimeStr):
     return dateObj
 
 
-def returnElevationPoints(inputFile,isOrthoMetric,token):
+def returnElevationPoints(inputFile,isOrthoMetric):
 
     inputCSVFile = open(inputFile)
     num_lines = sum(1 for line in inputCSVFile)
     inputCSVFile.close()
 
     inputCSVFile = open(inputFile)
+
+    token = returnArcGISToken()
+
+    #arcpy.AddMessage(num_lines)
 
     DEMInterval = (num_lines * 10) / 100
     DEMInterval = round(DEMInterval)
@@ -460,53 +490,64 @@ def returnElevationPoints(inputFile,isOrthoMetric,token):
 
     with inputCSVFile:
         allLines = inputCSVFile.readlines()
+        #allLinesCount = len(allLines)
 
     for line in allLines:
-        if line != None:
-            count= count+1
-            if count == 0:
-                DEMIntReset = DEMIntReset+1
-                headerLineSplit = line.split(',')
-                hLineIndex = -1
-                for hline in headerLineSplit:
-                    hLineIndex= hLineIndex+1
-                    if 'SensorLatitude' in hline:
-                        latIndex = hLineIndex
+        count= count+1
+        #arcpy.AddMessage("count {}".format(str(count)))
+        if count == 0:
+            DEMIntReset = DEMIntReset+1
+##            if line == "\n":
+##                continue
 
-                    if 'SensorLongitude' in hline:
-                        longIndex = hLineIndex
+            headerLineSplit = line.split(',')
+            hLineIndex = -1
+            for hline in headerLineSplit:
+                hLineIndex= hLineIndex+1
+                if 'SensorLatitude' in hline:
+                    latIndex = hLineIndex
 
-            if count == 1 or DEMIntReset == DEMInterval:
-                headerLineSplit = line.split(',')
-                y = headerLineSplit[latIndex]
-                x = headerLineSplit[longIndex]
+                if 'SensorLongitude' in hline:
+                    longIndex = hLineIndex
 
-                srs = '4326'
-                ptGeometry = {
-                  "x": x,
-                  "y": y,
-                  "spatialReference": srs
-                }
+        if count == 1 or DEMIntReset == DEMInterval or count == num_lines:
+            headerLineSplit = line.split(',')
+            y = headerLineSplit[latIndex]
+            x = headerLineSplit[longIndex]
 
-                identifyURL = IDENTIFY_URL.format(ptGeometry,renderingrule,token)
+            #arcpy.AddMessage("AAAA ::: "+line)
+            srs = '4326'
+            ptGeometry = {
+              "x": x,
+              "y": y,
+              "spatialReference": srs
+            }
 
-                try:
+            elevVal = None
+
+            try:
+                retrycount = 0
+                while retrycount < 5:
+                    identifyURL = IDENTIFY_URL.format(ptGeometry,renderingrule,token)
                     response = requests.get(identifyURL, verify=False)
                     responseJSON = response.json()
-                    if responseJSON != "":
+                    if 'error' in responseJSON:
+                       token = returnArcGISToken()
+                       retrycount = retrycount + 1
+                    else:
                         elevVal = responseJSON['value']
                         elevationPoints.append(float(elevVal))
-                    else:
-                        return None
+                        break
+                        #arcpy.AddMessage("Elevl {}".format(str(elevVal)))
 
-                    DEMIntReset = 0
+                DEMIntReset = 0
 
-                except Exception as e:
-                    if log:
-                        log.Message("Error: {}".format(
-                            str(e)), log.const_critical_text)
-            else:
-                DEMIntReset = DEMIntReset + 1
+            except Exception as e:
+                if log:
+                    log.Message("Error: {}".format(
+                        str(e)), log.const_critical_text)
+        else:
+            DEMIntReset = DEMIntReset + 1
 
     inputCSVFile.close()
 
@@ -515,11 +556,8 @@ def returnElevationPoints(inputFile,isOrthoMetric,token):
 def returnArcGISToken():
 
     signintoken = arcpy.GetSigninToken()
-    if signintoken != None:
-        aToken = signintoken['token']
-        return aToken
-    else:
-        return None
+    aToken = signintoken['token']
+    return aToken
 
 
 
