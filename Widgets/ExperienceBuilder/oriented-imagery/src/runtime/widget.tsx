@@ -385,7 +385,7 @@ export default class Widget extends BaseWidget<AllWidgetProps<IMConfig>, State>{
       
 
     }
-    if (window.location.href.indexOf('oic') !== -1) {
+    if (window.location.href.indexOf('oic=') !== -1) {
         let v = window.location.href.split('oic=')[1];
         if (v) {
           this.oicList[0] = ("https://www.arcgis.com/sharing/rest/content/items/" + v.split("&")[0]);
