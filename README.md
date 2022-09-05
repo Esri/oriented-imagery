@@ -15,6 +15,88 @@ To view OICs in ArcGIS Pro, download the [Oriented Imagery add-in for ArcGIS Pro
 
 ## What's new in Oriented Imagery developer resources
 
+### Version 2.11 (release June 2022)
+
+* What’s new in Oriented Imagery widget for Experience Builder:
+   - Fixed the issue with Oriented Imagery graphics not displayed in the correct order.
+   - Updated the max canvas area on HTML canvas to work with iOS devices.
+   - Added support for the query module in JS API 4.24 (QueryTask deprecated).
+   - Support for GeoJSON added to the OI widget.
+   - Added support for DefaultImagery and DefaultSearchLocation parameters.
+   - Updated the widget code and removed the hard coded MaxDistance value.
+
+
+* What’s new in Oriented Imagery API:
+   - Updated the max canvas area on HTML canvas to work with iOS devices.
+   - Added support for GeoJSON in the OIC JSON.
+   - Updated OI API to accomodate the deprecation of tasks/GeometryService in JS API 4.24.
+   - Fixed the issue with copyright message appearing over the video slider in video OICs.
+   - Current coverage is updated with change in video slider (viewer).
+   - Fixed the issue for current coverage not updating in video OICs.
+   - Updated the max canvas area on HTML canvas to work with iOS devices.
+   - Folder structure for t9n (translation) strings updated.
+   - Added support for the query module in JS API 4.24 (QueryTask deprecated).
+   - Oriented Imagery catalogs now supports multiple authentication types for Enterprise portals.
+   - API now suports depth image for all image types.
+   - Updated the accuracy of editable features in the OIC viewer.
+   - Editing workflow (editable features) now works in the Add-in.
+   - The navigation tool refreshes upon selecting a space with no image.
+   - Viewer.html file deprecated from the API folder.
+
+### Version 2.10 (release March 2022)
+
+* What’s new in Oriented Imagery Webapp:
+   - Added support for DefaultImage and DefaultSearchLocation parameter in the OIC.
+   - Upgraded the Oriented Imagery graphics to display the correct order on the map.
+   - Fixed the issue with the distance tool in the overlay tab for editable feature layer.
+   - Fixed the measurement tool.
+   - Updated the Image Gallery scroll bar.
+   - Fixed the App widget used to view selected features in image.
+   - Updated the distance tool in the overlay tab.
+
+
+* What’s new in Oriented Imagery API:
+   - Added support for 360 degree images.
+   - Enhanced the accuracy of the current coverage (image footprint).
+   - CamOri attribute extended to support local tangent plane (ENU) cordinate system.
+   - Updated navigation tool.
+   - Added support for RGB based MRF imagery.
+   - Added support to display thumbnails for feature attachments.
+   - Updated superimpose view in the standard viewer.
+   - Added support for mrf DEM.
+   - Updated Autoswitch mode in the standard viewer.
+   - Enhanced ground to image accuracy.
+   - Added sharpness slider in the OI viewer.
+   - Added Coverage Percent parameter to OIC json.
+   - Updated the TimeUnit filter and the TimeSelector tool.
+   - Integrated Mapillary API v4.0 with Oriented Imagery API.
+   - Enhanced the accuracy of overlay vectors.
+   - Updated the API to work in ArcGIS Enterprise.
+   - Added support for ImageSuffix, DepthImageSuffix, DEMSuffix in the API.
+   - Updated the logic for showing camera locations (overlay) in the viewer.
+   - Added support to create OICs with XLS frametables.
+   - Updated best image selected in 3D environment.
+   - Removed corsEnabledServer from OI API as it is deprecated in 4.9 JS API version.
+   - Add a button to enable/disable image depth slider in superimpose view.
+   - Added support to get presigned URL for images on secured bucket.
+   - Added a new mode of navigation from one image to another based on SortOrder attribute.
+   - Other bug fixes.
+
+### Version 2.9 (release December 2021)
+
+* What’s new in Oriented Imagery Webapp:
+   - Overlaid line features issue has been fixed.
+   - Face lines issue in superimpose view for cube images has been fixed.
+   - All QuickCapture issues for item URL in OIC have been fixed.
+
+* What’s new in Oriented Imagery API:
+   - TIF images are read in image space using RasterX.
+   - Appropriate error messages based on HTTP status code are displayed.
+   - Right Z values are computed if world elevation is provided as the DEM source.
+   - New enhancements related video have been added.
+   - Fixed the issue where images with large sizes were not being displayed in the viewer.
+
+
 ### Version 2.7 (release July 2021)
 
 * What’s new in Oriented Imagery API:
