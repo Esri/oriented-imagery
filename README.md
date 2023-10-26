@@ -1,19 +1,21 @@
-# Oriented Imagery
+# Oriented Imagery Classic - Development Resources
 
-This repo contains developer resources for Oriented Imagery, including 2D and 3D Web AppBuilder widgets, the Experience Builder widget, a description of the Oriented Imagery API, and a schema for oriented imagery catalogs (OICs). Learn more about [Oriented Imagery](https://doc.arcgis.com/en/imagery/workflows/resources/managing-and-visualizing-oriented-imagery.htm) on the Imagery Workflows site.
+<b>These resources relate to Oriented Imagery Classic, which is a community-supported, add-in solution for managing and visualizing imagery as a part of your GIS. The oriented imagery capability is being integrated into the ArcGIS system; read [this blog](https://www.esri.com/arcgis-blog/products/arcgis/imagery/introducing-oriented-imagery/) to learn more.</b>
 
-Use the Oriented Imagery widgets for Web AppBuilder for ArcGIS and Experience Builder to build web apps to explore oriented imagery (imagery not pointing straight down at the ground) from aerial, drone, or terrestrial sensors. App users select an oriented imagery catalog, click a location of interest on the map, then explore any available oblique, street-view, or inspection images that depict the area of interest using the inset viewer. As you pan and zoom in the oriented image, see the camera’s field of view dynamically updated on the map. Check out examples of a [2D app](https://oi1.img.arcgis.com/app/index.html) and a [3D app](https://oi1.img.arcgis.com/app3D/index.html) built with the widgets.
+This repo contains developer resources for Oriented Imagery Classic, including 2D and 3D Web AppBuilder widgets, the Experience Builder widget, a description of the Oriented Imagery Classic API, and a schema for oriented imagery catalogs (OICs). Learn more about [Oriented Imagery Classic](https://doc.arcgis.com/en/imagery/workflows/resources/managing-and-visualizing-oriented-imagery.htm) on the Imagery Workflows site.
 
-Also in this repo, find a description of the [Oriented Imagery API](OrientedImagery_API.pdf), which can be used to build custom oriented imagery applications. 
+Use the Oriented Imagery Classic widgets for Web AppBuilder for ArcGIS and Experience Builder to build web apps to explore oriented imagery (imagery not pointing straight down at the ground) from aerial, drone, or terrestrial sensors. App users select an oriented imagery catalog, click a location of interest on the map, then explore any available oblique, street-view, or inspection images that depict the area of interest using the inset viewer. As you pan and zoom in the oriented image, see the camera’s field of view dynamically updated on the map. Check out examples of a [2D app](https://oi1.img.arcgis.com/app/index.html) and a [3D app](https://oi1.img.arcgis.com/app3D/index.html) built with the widgets.
+
+Also in this repo, find a description of the [Oriented Imagery Classic API](OrientedImagery_API.pdf), which can be used to build custom oriented imagery applications. 
 
 This repo also contains a [description of the oriented imagery catalog (OIC) schema](OrientedImageryCatalog_Schema.pdf) for use in developing your own applications. OIC is the data structure used to manage oriented imagery in ArcGIS. The OIC is defined as a JSON that references a point-based feature service that defines the camera location, orientation, and image metadata. 
 
-To view OICs in ArcGIS Pro, download the [Oriented Imagery add-in for ArcGIS Pro](https://esriurl.com/OrientedImageryAddIn). To create and manage your own OICs, download the Oriented Imagery Management Tools from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=36ee0bbedca64a5a8b68d7c69ab51728).
+To view OICs in ArcGIS Pro, download the [Oriented Imagery Classic add-in for ArcGIS Pro](https://esriurl.com/OrientedImageryAddIn). To create and manage your own OICs, download the Oriented Imagery Classic Management Tools from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=36ee0bbedca64a5a8b68d7c69ab51728).
 
 ![App](OrientedImageryExampleApp.png)
 
 
-## What's new in Oriented Imagery developer resources
+## What's new in Oriented Imagery Classic developer resources
 
 ### Version 2.11 (release June 2022)
 
